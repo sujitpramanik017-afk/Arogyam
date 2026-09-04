@@ -1,0 +1,340 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Rachana's Collection | Premium Indian Sarees{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-brand-charcoal text-brand-cream overflow-hidden min-h-[60vh] flex items-center">
+    <!-- Background Banner Image -->
+    <div class="absolute inset-0 bg-cover bg-center z-0 opacity-40 transform scale-105 transition-transform duration-10000" style="background-image: url('{% static 'images/banner.png' %}');"></div>
+    <!-- Editorial Gradient Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-r from-brand-charcoal via-brand-charcoal/80 to-transparent z-10"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 z-20 flex flex-col items-start max-w-xl md:max-w-2xl">
+        <span class="text-brand-gold text-xs uppercase tracking-widest font-semibold mb-3 block animate-fade-in">Handcrafted Masterpieces</span>
+        <h1 class="font-serif text-4xl md:text-6xl font-bold tracking-wide leading-tight mb-4 text-brand-cream">
+            Timeless Sarees. <br>
+            <span class="text-brand-gold italic">Modern Elegance.</span>
+        </h1>
+        <p class="text-sm md:text-base text-gray-300 mb-8 leading-relaxed font-light">
+            Indulge in the luxury of pure silk, intricate zari brocades, and fine handloom weaves. Rachana's Collection offers heirloom sarees woven with generations of heritage craftsmanship.
+        </p>
+        <div class="flex flex-wrap gap-4">
+            <a href="/products/" class="bg-brand-maroon hover:bg-brand-gold text-brand-cream hover:text-brand-charcoal px-8 py-3 rounded text-xs font-semibold uppercase tracking-widest transition duration-300">Shop Sarees</a>
+            <a href="/about/" class="border border-brand-cream hover:border-brand-gold text-brand-cream hover:text-brand-gold px-8 py-3 rounded text-xs font-semibold uppercase tracking-widest transition duration-300">Explore Story</a>
+        </div>
+    </div>
+</section>
+
+<!-- Brand Story Highlight -->
+<section class="py-12 bg-brand-beige/30 border-b border-brand-beige">
+    <div class="max-w-7xl mx-auto px-4 text-center max-w-3xl">
+        <h2 class="font-serif text-2xl md:text-3xl text-brand-maroon mb-3 font-semibold">Tradition Woven Into Elegance</h2>
+        <p class="text-xs md:text-sm text-gray-600 leading-relaxed font-light">
+            Every thread in a Rachana's Collection saree is woven with precision, carrying forward centuries-old weaving techniques of Kanchipuram, Banaras, and Bengal. We bridge luxury and authenticity for the modern Indian woman.
+        </p>
+    </div>
+</section>
+
+<!-- Categories Grid Section -->
+<section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+        <span class="text-brand-gold text-xs uppercase tracking-widest font-bold">Discover By Style</span>
+        <h2 class="font-serif text-3xl md:text-4xl text-brand-maroon font-bold mt-1">Our Beautiful Categories</h2>
+        <div class="h-0.5 w-16 bg-brand-gold mx-auto mt-4"></div>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {% for cat in categories %}
+        <div class="group relative overflow-hidden bg-brand-beige border border-brand-beige/40 rounded-lg shadow-sm hover:shadow-md transition duration-300">
+            <div class="aspect-[3/4] overflow-hidden bg-gray-100">
+                <img src="{{ cat.image_url }}" alt="{{ cat.name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 loading-lazy">
+            </div>
+            <!-- Overlay and Info -->
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-charcoal/80 via-transparent to-transparent flex flex-col justify-end p-4">
+                <h3 class="font-serif text-base md:text-lg text-brand-cream font-semibold">{{ cat.name }}</h3>
+                <a href="/products/?category={{ cat.slug }}" class="text-brand-gold text-2xs uppercase tracking-widest font-bold mt-1 inline-flex items-center gap-1 group-hover:text-brand-cream transition">
+                    Shop Now <i class="fa-solid fa-arrow-right text-[9px] transform group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Best Sellers Slider / Grid -->
+<section class="py-16 bg-brand-beige/20 border-y border-brand-beige">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row items-center justify-between mb-12">
+            <div class="text-center md:text-left mb-4 md:mb-0">
+                <span class="text-brand-gold text-xs uppercase tracking-widest font-bold">Curated Favorites</span>
+                <h2 class="font-serif text-3xl md:text-4xl text-brand-maroon font-bold mt-1">Our Best Sellers</h2>
+            </div>
+            <a href="/products/?sort=popularity" class="text-brand-maroon hover:text-brand-gold text-xs uppercase tracking-widest font-semibold border-b border-brand-maroon hover:border-brand-gold pb-1 transition">View All Best Sellers</a>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {% for prod in best_sellers %}
+            <div class="group relative bg-brand-cream border border-brand-beige/60 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-300 flex flex-col">
+                
+                <!-- Product Badges -->
+                <div class="absolute top-3 left-3 z-10 flex flex-col gap-1">
+                    <span class="bg-brand-maroon text-brand-cream text-[9px] uppercase tracking-widest px-2 py-0.5 rounded font-semibold">Bestseller</span>
+                    {% if prod.discount > 0 %}
+                    <span class="bg-brand-gold text-brand-charcoal text-[9px] uppercase tracking-widest px-2 py-0.5 rounded font-semibold">{{ prod.discount }}% Off</span>
+                    {% endif %}
+                </div>
+
+                <!-- Product Wishlist Button -->
+                <button onclick="toggleWishlist(this, {{ prod.id }})" class="absolute top-3 right-3 z-10 bg-brand-cream/80 hover:bg-brand-cream text-brand-maroon hover:text-red-600 rounded-full w-8 h-8 flex items-center justify-center shadow transition focus:outline-none">
+                    <i class="fa-regular fa-heart text-sm"></i>
+                </button>
+
+                <!-- Product Image -->
+                <div class="aspect-[3/4] overflow-hidden bg-brand-beige relative">
+                    <a href="/products/{{ prod.slug }}/">
+                        <img src="{{ prod.image_url }}" alt="{{ prod.name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    </a>
+                </div>
+
+                <!-- Info & Pricing -->
+                <div class="p-4 flex-grow flex flex-col justify-between">
+                    <div>
+                        <a href="/products/{{ prod.slug }}/" class="font-serif text-sm md:text-base text-brand-charcoal hover:text-brand-maroon font-medium block truncate mb-1">{{ prod.name }}</a>
+                        <span class="text-2xs text-gray-500 uppercase tracking-wider block mb-2">{{ prod.fabric }} | {{ prod.color }}</span>
+                        
+                        <!-- Ratings -->
+                        <div class="flex items-center gap-1 mb-3">
+                            <div class="flex text-brand-gold text-2xs">
+                                {% for s in prod.rating_info.stars %}
+                                <i class="fa-solid fa-star"></i>
+                                {% endfor %}
+                                {% for sb in prod.rating_info.blank_stars %}
+                                <i class="fa-regular fa-star"></i>
+                                {% endfor %}
+                            </div>
+                            <span class="text-[10px] text-gray-400">({{ prod.rating_info.count }})</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <!-- Pricing -->
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="font-semibold text-brand-maroon text-sm md:text-base">₹{{ prod.price }}</span>
+                            {% if prod.compare_at_price %}
+                            <span class="text-xs text-gray-400 line-through">₹{{ prod.compare_at_price }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Actions -->
+                        <button onclick="addToCart(this, {{ prod.id }})" class="w-full bg-brand-maroon hover:bg-brand-gold text-brand-cream hover:text-brand-charcoal py-2 px-3 rounded text-[10px] uppercase font-bold tracking-widest transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-bag-shopping"></i> Add To Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+<!-- Collection Highlights -->
+<section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+        <span class="text-brand-gold text-xs uppercase tracking-widest font-bold">Heritage Edits</span>
+        <h2 class="font-serif text-3xl md:text-4xl text-brand-maroon font-bold mt-1">Exquisite Collections</h2>
+        <div class="h-0.5 w-16 bg-brand-gold mx-auto mt-4"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {% for col in collections %}
+        <div class="relative group overflow-hidden rounded-lg border border-brand-beige/35 shadow-sm">
+            <div class="aspect-[4/5] bg-gray-100 overflow-hidden">
+                <img src="{{ col.image_url }}" alt="{{ col.name }}" class="w-full h-full object-cover group-hover:scale-102 transition duration-500">
+            </div>
+            <div class="absolute inset-0 bg-brand-charcoal/65 flex flex-col justify-end p-6 md:p-8">
+                <h3 class="font-serif text-xl md:text-2xl text-brand-gold font-bold mb-2">{{ col.name }}</h3>
+                <p class="text-xs text-gray-300 font-light mb-4">{{ col.description }}</p>
+                <div>
+                    <a href="/products/?collection={{ col.slug }}" class="inline-block bg-brand-cream text-brand-maroon hover:bg-brand-gold hover:text-brand-charcoal font-bold text-2xs uppercase tracking-widest px-6 py-2.5 rounded transition">Explore Collection</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- New Arrivals Grid -->
+<section class="py-16 bg-brand-beige/10 border-t border-brand-beige">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row items-center justify-between mb-12">
+            <div class="text-center md:text-left mb-4 md:mb-0">
+                <span class="text-brand-gold text-xs uppercase tracking-widest font-bold">Just Unveiled</span>
+                <h2 class="font-serif text-3xl md:text-4xl text-brand-maroon font-bold mt-1">New Arrivals</h2>
+            </div>
+            <a href="/products/?sort=newest" class="text-brand-maroon hover:text-brand-gold text-xs uppercase tracking-widest font-semibold border-b border-brand-maroon hover:border-brand-gold pb-1 transition">Browse All New Arrivals</a>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {% for prod in new_arrivals %}
+            <div class="group relative bg-brand-cream border border-brand-beige/60 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-300 flex flex-col">
+                
+                <!-- Product Badges -->
+                <div class="absolute top-3 left-3 z-10 flex flex-col gap-1">
+                    <span class="bg-brand-gold text-brand-charcoal text-[9px] uppercase tracking-widest px-2 py-0.5 rounded font-semibold">New</span>
+                    {% if prod.discount > 0 %}
+                    <span class="bg-brand-maroon text-brand-cream text-[9px] uppercase tracking-widest px-2 py-0.5 rounded font-semibold">{{ prod.discount }}% Off</span>
+                    {% endif %}
+                </div>
+
+                <!-- Product Wishlist Button -->
+                <button onclick="toggleWishlist(this, {{ prod.id }})" class="absolute top-3 right-3 z-10 bg-brand-cream/80 hover:bg-brand-cream text-brand-maroon hover:text-red-600 rounded-full w-8 h-8 flex items-center justify-center shadow transition focus:outline-none">
+                    <i class="fa-regular fa-heart text-sm"></i>
+                </button>
+
+                <!-- Product Image -->
+                <div class="aspect-[3/4] overflow-hidden bg-brand-beige relative">
+                    <a href="/products/{{ prod.slug }}/">
+                        <img src="{{ prod.image_url }}" alt="{{ prod.name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    </a>
+                </div>
+
+                <!-- Info & Pricing -->
+                <div class="p-4 flex-grow flex flex-col justify-between">
+                    <div>
+                        <a href="/products/{{ prod.slug }}/" class="font-serif text-sm md:text-base text-brand-charcoal hover:text-brand-maroon font-medium block truncate mb-1">{{ prod.name }}</a>
+                        <span class="text-2xs text-gray-500 uppercase tracking-wider block mb-2">{{ prod.fabric }} | {{ prod.color }}</span>
+                        
+                        <!-- Ratings -->
+                        <div class="flex items-center gap-1 mb-3">
+                            <div class="flex text-brand-gold text-2xs">
+                                {% for s in prod.rating_info.stars %}
+                                <i class="fa-solid fa-star"></i>
+                                {% endfor %}
+                                {% for sb in prod.rating_info.blank_stars %}
+                                <i class="fa-regular fa-star"></i>
+                                {% endfor %}
+                            </div>
+                            <span class="text-[10px] text-gray-400">({{ prod.rating_info.count }})</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <!-- Pricing -->
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="font-semibold text-brand-maroon text-sm md:text-base">₹{{ prod.price }}</span>
+                            {% if prod.compare_at_price %}
+                            <span class="text-xs text-gray-400 line-through">₹{{ prod.compare_at_price }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Actions -->
+                        <button onclick="addToCart(this, {{ prod.id }})" class="w-full bg-brand-maroon hover:bg-brand-gold text-brand-cream hover:text-brand-charcoal py-2 px-3 rounded text-[10px] uppercase font-bold tracking-widest transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-bag-shopping"></i> Add To Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // AJAX Add to Cart
+    function addToCart(button, productId) {
+        // Prevent double submits
+        button.disabled = true;
+        const originalHTML = button.innerHTML;
+        button.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Adding...';
+        
+        fetch(`/cart/add/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ quantity: 1 })
+        })
+        .then(res => res.json())
+        .then(data => {
+            button.disabled = false;
+            button.innerHTML = originalHTML;
+            if(data.status === 'success') {
+                showToast(data.message, 'success');
+                
+                // Update badge count
+                const badge = document.getElementById('cart-badge');
+                badge.innerText = data.total_items;
+                badge.classList.remove('hidden');
+            } else {
+                showToast(data.message, 'error');
+            }
+        })
+        .catch(err => {
+            button.disabled = false;
+            button.innerHTML = originalHTML;
+            showToast("Failed to add product to cart.", "error");
+        });
+    }
+
+    // AJAX Toggle Wishlist
+    function toggleWishlist(button, productId) {
+        button.disabled = true;
+        const icon = button.querySelector('i');
+        
+        fetch(`/wishlist/toggle/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            button.disabled = false;
+            if(data.status === 'success') {
+                showToast(data.message, 'success');
+                // Change heart shape
+                if(data.action === 'added') {
+                    icon.className = 'fa-solid fa-heart text-sm text-red-600';
+                } else {
+                    icon.className = 'fa-regular fa-heart text-sm text-brand-maroon';
+                }
+                
+                // Update badge
+                let badge = document.getElementById('wishlist-badge');
+                if(data.wishlist_count > 0) {
+                    if(!badge) {
+                        // Create it if not there
+                        const link = button.parentElement.parentElement.parentElement; // dummy reference
+                        // Reload badge from site
+                        location.reload(); // Simple refresh or badge refresh
+                    } else {
+                        badge.innerText = data.wishlist_count;
+                        badge.classList.remove('hidden');
+                    }
+                } else if(badge) {
+                    badge.classList.add('hidden');
+                }
+            } else {
+                showToast(data.message, 'error');
+                if(data.message.includes('Login')) {
+                    setTimeout(() => window.location.href = '/login/', 1500);
+                }
+            }
+        })
+        .catch(err => {
+            button.disabled = false;
+            showToast("Error updating wishlist.", "error");
+        });
+    }
+</script>
+{% endblock %}

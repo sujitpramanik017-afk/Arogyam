@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us | Rachana's Collection{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="bg-brand-beige py-12 border-b border-brand-beige/50 text-center">
+    <h1 class="font-serif text-3xl md:text-5xl text-brand-maroon font-bold">Contact Us</h1>
+    <p class="text-xs md:text-sm text-gray-500 uppercase tracking-widest mt-2 font-semibold">We would love to hear from you</p>
+</section>
+
+<section class="py-16 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+        
+        <!-- Contact Information -->
+        <div class="space-y-8">
+            <div>
+                <span class="text-brand-gold text-xs uppercase tracking-widest font-bold">Get In Touch</span>
+                <h2 class="font-serif text-2xl md:text-3xl text-brand-maroon font-bold mt-1">Our Showroom & Office</h2>
+                <p class="text-xs text-gray-500 mt-2 font-light">Visit our experience center or contact customer support for custom saree customization or bridal consultation bookings.</p>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Coordinate 1 -->
+                <div class="flex items-start gap-4">
+                    <div class="bg-brand-beige text-brand-maroon rounded-full p-3 text-sm">
+                        <i class="fa-solid fa-location-dot w-4 h-4 text-center"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-serif text-sm font-semibold text-brand-maroon">Our Address</h4>
+                        <p class="text-xs text-gray-600 font-light mt-1">102 Heritage Arcade, Palace Road, Jaipur, Rajasthan, India - 302001</p>
+                    </div>
+                </div>
+
+                <!-- Coordinate 2 -->
+                <div class="flex items-start gap-4">
+                    <div class="bg-brand-beige text-brand-maroon rounded-full p-3 text-sm">
+                        <i class="fa-solid fa-phone w-4 h-4 text-center"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-serif text-sm font-semibold text-brand-maroon">Phone & WhatsApp</h4>
+                        <p class="text-xs text-gray-600 font-light mt-1">
+                            Call: +91 98765 43210 <br>
+                            WhatsApp: +91 98765 43211
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Coordinate 3 -->
+                <div class="flex items-start gap-4">
+                    <div class="bg-brand-beige text-brand-maroon rounded-full p-3 text-sm">
+                        <i class="fa-solid fa-envelope w-4 h-4 text-center"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-serif text-sm font-semibold text-brand-maroon">Email Care</h4>
+                        <p class="text-xs text-gray-600 font-light mt-1">customercare@rachanascollection.com</p>
+                    </div>
+                </div>
+
+                <!-- Coordinate 4 -->
+                <div class="flex items-start gap-4">
+                    <div class="bg-brand-beige text-brand-maroon rounded-full p-3 text-sm">
+                        <i class="fa-solid fa-clock w-4 h-4 text-center"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-serif text-sm font-semibold text-brand-maroon">Business Hours</h4>
+                        <p class="text-xs text-gray-600 font-light mt-1">Mon - Sat: 10:00 AM - 7:00 PM IST (Closed Sundays)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="bg-brand-beige/20 border border-brand-beige p-8 rounded-lg">
+            <h3 class="font-serif text-xl font-semibold text-brand-maroon mb-6">Send Us a Message</h3>
+            
+            <form action="/contact/" method="POST" class="space-y-4">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-500 font-bold mb-1">Your Name *</label>
+                        <input type="text" name="name" required class="w-full bg-brand-cream border border-brand-beige rounded px-3 py-2 text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-500 font-bold mb-1">Email Address *</label>
+                        <input type="email" name="email" required class="w-full bg-brand-cream border border-brand-beige rounded px-3 py-2 text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-500 font-bold mb-1">Phone Number</label>
+                        <input type="text" name="phone" class="w-full bg-brand-cream border border-brand-beige rounded px-3 py-2 text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-500 font-bold mb-1">Subject *</label>
+                        <input type="text" name="subject" required class="w-full bg-brand-cream border border-brand-beige rounded px-3 py-2 text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-500 font-bold mb-1">Your Message *</label>
+                    <textarea name="message" rows="5" required class="w-full bg-brand-cream border border-brand-beige rounded px-3 py-2 text-xs focus:outline-none focus:border-brand-gold"></textarea>
+                </div>
+                <div>
+                    <button type="submit" class="w-full bg-brand-maroon hover:bg-brand-gold text-brand-cream hover:text-brand-charcoal font-bold py-2.5 px-6 rounded text-xs uppercase tracking-widest transition duration-300">Send Message</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

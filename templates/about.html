@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us | Rachana's Collection{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="bg-brand-beige py-12 border-b border-brand-beige/50 text-center">
+    <h1 class="font-serif text-3xl md:text-5xl text-brand-maroon font-bold">Our Story & Craft</h1>
+    <p class="text-xs md:text-sm text-gray-500 uppercase tracking-widest mt-2 font-semibold">Tradition Woven Into Elegance</p>
+</section>
+
+<!-- Content Block 1: Our Story -->
+<section class="py-16 max-w-5xl mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+            <span class="text-brand-gold text-xs uppercase tracking-widest font-bold">The Beginning</span>
+            <h2 class="font-serif text-2xl md:text-3xl text-brand-maroon font-bold mt-1 mb-4">Our Story</h2>
+            <p class="text-xs md:text-sm text-gray-600 leading-relaxed font-light mb-4">
+                Founded by Rachana in the heart of traditional craftsmanship, Rachana's Collection began as a passion project to preserve the heritage of hand-woven Indian textiles. Witnessing the decline of traditional weaving looms, we set out on a journey to empower weavers and present their masterpieces to the global stage.
+            </p>
+            <p class="text-xs md:text-sm text-gray-600 leading-relaxed font-light">
+                Today, Rachana's Collection stands as a symbol of luxury, combining centuries-old Indian weaves with contemporary design sensibilities. Every saree in our catalog represents hours of meticulous work, deep passion, and a piece of India's cultural soul.
+            </p>
+        </div>
+        <div class="rounded overflow-hidden shadow-md aspect-[4/3] bg-brand-beige">
+            <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=80" alt="Weaving silk saree" class="w-full h-full object-cover">
+        </div>
+    </div>
+</section>
+
+<!-- Content Block 2: Our Craft -->
+<section class="py-16 bg-brand-beige/20 border-y border-brand-beige">
+    <div class="max-w-5xl mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="order-last md:order-first rounded overflow-hidden shadow-md aspect-[4/3] bg-brand-beige">
+                <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&q=80" alt="Exquisite embroidery work" class="w-full h-full object-cover">
+            </div>
+            <div>
+                <span class="text-brand-gold text-xs uppercase tracking-widest font-bold">The Artistry</span>
+                <h2 class="font-serif text-2xl md:text-3xl text-brand-maroon font-bold mt-1 mb-4">Our Craft</h2>
+                <p class="text-xs md:text-sm text-gray-600 leading-relaxed font-light mb-4">
+                    Our weaves utilize the purest mulberry silk, tussar silk, and hand-spun organic cotton. We specialize in classic weaving methods: the double-warp technique of Kanchipuram, where border and pallu are woven separately and joined with zig-zag joints, and the float-weaving techniques of Banaras zari work.
+                </p>
+                <p class="text-xs md:text-sm text-gray-600 leading-relaxed font-light">
+                    By working directly with master artisans, we ensure that every design maintains its historical integrity while ensuring fair wages, ethical work environments, and sustainable crafting practices.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Values Section: Mission, Promise, Why Us -->
+<section class="py-16 max-w-5xl mx-auto px-4">
+    <div class="text-center mb-12">
+        <span class="text-brand-gold text-xs uppercase tracking-widest font-bold">Core Philosophy</span>
+        <h2 class="font-serif text-3xl text-brand-maroon font-bold mt-1">Our Values</h2>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <!-- Value 1 -->
+        <div class="p-6 border border-brand-beige rounded bg-brand-cream shadow-sm">
+            <div class="text-brand-gold text-2xl mb-3"><i class="fa-solid fa-gem"></i></div>
+            <h3 class="font-serif text-lg text-brand-maroon font-semibold mb-2">Quality Promise</h3>
+            <p class="text-xs text-gray-500 font-light leading-relaxed">We conduct stringent quality checks on fabric purity, thread count, and border alignments. Only 100% genuine silks and premium cotton make it to our store.</p>
+        </div>
+        <!-- Value 2 -->
+        <div class="p-6 border border-brand-beige rounded bg-brand-cream shadow-sm">
+            <div class="text-brand-gold text-2xl mb-3"><i class="fa-solid fa-users"></i></div>
+            <h3 class="font-serif text-lg text-brand-maroon font-semibold mb-2">Artisan Empowerment</h3>
+            <p class="text-xs text-gray-500 font-light leading-relaxed">Direct profit sharing with weavers keeps local weaving communities thriving and protects ancient skills from disappearing in a fast-fashion age.</p>
+        </div>
+        <!-- Value 3 -->
+        <div class="p-6 border border-brand-beige rounded bg-brand-cream shadow-sm">
+            <div class="text-brand-gold text-2xl mb-3"><i class="fa-solid fa-leaf"></i></div>
+            <h3 class="font-serif text-lg text-brand-maroon font-semibold mb-2">Sustainable Elegance</h3>
+            <p class="text-xs text-gray-500 font-light leading-relaxed">Natural dyes, eco-friendly handloom processes, and minimal plastic packaging make our sarees a beautiful choice for you and the planet.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
