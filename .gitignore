@@ -5,6 +5,8 @@ __pycache__/
 
 # Database
 *.sqlite3
+*.sqlite
+*.db
 db.sqlite3
 
 # Media and static directories
@@ -23,3 +25,11 @@ env/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Node / Vite
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+.vite/
+.vercel/
