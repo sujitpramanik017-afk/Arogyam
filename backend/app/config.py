@@ -19,7 +19,9 @@ class Settings:
     ALGORITHM = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
     
-    DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./sanaka_hospital.db")
+    is_vercel = bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
+    default_db = "sqlite:////tmp/sanaka_hospital.db" if is_vercel else "sqlite:///./sanaka_hospital.db"
+    DATABASE_URL = os.getenv("DATABASE_URL", default_db)
     
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
