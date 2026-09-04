@@ -1,0 +1,9 @@
+from app.routes.auth_routes import router as auth_router
+from app.routes.patient_routes import router as patient_router
+from app.routes.case_routes import router as case_router
+from app.routes.appointment_routes import router as appointment_router
+from app.routes.prescription_routes import router as prescription_router
+from app.routes.doctor_routes import router as doctor_router
+from app.routes.department_routes import router as department_router
+from app.routes.ai_routes import router as ai_router
+from app.routes.admin_routes import router as admin_router
