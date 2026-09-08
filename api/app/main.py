@@ -15,17 +15,23 @@ from app.routes.admin_routes import router as admin_router
 from app.routes.patient_portal_routes import router as patient_portal_router
 from app.utils.seed_data import seed_database
 
-# Create DB tables & Seed in safe try-block for serverless cold-starts
+# Initialize database tables and bootstrap admin/departments if new database
 try:
     if "sqlite" in settings.DATABASE_URL:
         db_path = settings.DATABASE_URL.replace("sqlite:////", "/").replace("sqlite:///", "")
         db_dir = os.path.dirname(db_path)
         if db_dir and not os.path.exists(db_dir):
             os.makedirs(db_dir, exist_ok=True)
+        print("[Sanaka EMR] Running with local SQLite database")
+    else:
+        # PostgreSQL / Supabase
+        masked_url = settings.DATABASE_URL.split("@")[-1] if "@" in settings.DATABASE_URL else "PostgreSQL"
+        print(f"[Sanaka EMR] Connected to PostgreSQL host: {masked_url}")
+
     Base.metadata.create_all(bind=engine)
     seed_database()
 except Exception as e:
-    print(f"[Sanaka EMR] DB initialization notice: {e}")
+    print(f"[Sanaka EMR] Database initialization notice: {e}")
 
 
 app = FastAPI(

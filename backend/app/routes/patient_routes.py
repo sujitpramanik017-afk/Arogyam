@@ -56,7 +56,7 @@ def get_patients(
     if blood_group and blood_group != "All":
         query = query.filter(Patient.blood_group == blood_group)
         
-    patients = query.order_by(desc(Patient.created_at)).offset(offset).limit(limit).all()
+    patients = query.order_by(desc(Patient.id)).offset(offset).limit(limit).all()
     
     results = []
     for p in patients:

@@ -1,7 +1,47 @@
 import os
+from urllib.parse import quote_plus
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+default_db_file = (BASE_DIR / "sanaka_hospital.db").as_posix()
+
+def resolve_database_url() -> str:
+    # 1. Direct DATABASE_URL or POSTGRES_URL / SUPABASE_DB_URL
+    raw_url = os.getenv("DATABASE_URL") or os.getenv("POSTGRES_URL") or os.getenv("SUPABASE_DB_URL")
+    is_vercel = bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
+    if raw_url and raw_url.strip():
+        url = raw_url.strip()
+        # Detect unreplaced password placeholder from Supabase UI template
+        if "[YOUR-PASSWORD]" in url or "<password>" in url.lower():
+            print("[NOTICE] Supabase DATABASE_URL contains placeholder password [YOUR-PASSWORD]. Please replace with your actual Supabase database password.")
+            if not is_vercel:
+                return f"sqlite:///{default_db_file}"
+        # SQLAlchemy 2.0+ requires postgresql:// instead of postgres://
+        if url.startswith("postgres://"):
+            url = url.replace("postgres://", "postgresql://", 1)
+        return url
+
+    # 2. Separate credentials (DB_* or DATABASE_*)
+    db_name = os.getenv("DB_NAME") or os.getenv("DATABASE_NAME")
+    db_user = os.getenv("DB_USER") or os.getenv("DATABASE_USER")
+    db_password = os.getenv("DB_PASSWORD") or os.getenv("DATABASE_PASSWORD")
+    db_host = os.getenv("DB_HOST") or os.getenv("DATABASE_HOST")
+    db_port = os.getenv("DB_PORT") or os.getenv("DATABASE_PORT") or "5432"
+
+    if db_name and db_user and db_password and db_host:
+        encoded_user = quote_plus(db_user)
+        encoded_password = quote_plus(db_password)
+        return f"postgresql://{encoded_user}:{encoded_password}@{db_host}:{db_port}/{db_name}"
+
+    # 3. Local fallback to SQLite database file
+    is_vercel = bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
+    if is_vercel:
+        print("[WARNING] DATABASE_URL is not configured in Vercel environment variables! Connect Supabase PostgreSQL to persist data.")
+    return f"sqlite:///{default_db_file}"
+
 
 class Settings:
     PROJECT_NAME = "Sanaka Hospital Patient Case-Taking System"
@@ -19,11 +59,10 @@ class Settings:
     ALGORITHM = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
     
-    is_vercel = bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
-    default_db = "sqlite:////tmp/sanaka_hospital.db" if is_vercel else "sqlite:///./sanaka_hospital.db"
-    DATABASE_URL = os.getenv("DATABASE_URL", default_db)
+    DATABASE_URL = resolve_database_url()
     
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
 settings = Settings()
+

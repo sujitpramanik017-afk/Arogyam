@@ -7,7 +7,11 @@ __pycache__/
 *.sqlite3
 *.sqlite
 *.db
+*.db-journal
+*.db-wal
+*.db-shm
 db.sqlite3
+sanaka_hospital.db
 
 # Media and static directories
 media/
@@ -19,6 +23,10 @@ venv/
 ENV/
 env/
 .env
+.env.local
+.env.*.local
+!.env.example
+
 
 # IDEs and OS
 .idea/

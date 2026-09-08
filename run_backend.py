@@ -9,4 +9,11 @@ if backend_dir not in sys.path:
 
 if __name__ == '__main__':
     print("Starting Sanaka Hospital EMR Backend on http://127.0.0.1:8000 ...")
-    uvicorn.run("app.main:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run(
+        "app.main:app",
+        host="127.0.0.1",
+        port=8000,
+        reload=True,
+        reload_dirs=[backend_dir],
+        reload_excludes=["*.db", "*.db-journal", "*.sqlite*", "*.log", "__pycache__"]
+    )

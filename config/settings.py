@@ -77,33 +77,55 @@ ASGI_APPLICATION = 'config.asgi.application'
 
 
 # Database
+# Database Configuration
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DB_NAME = os.getenv('DATABASE_NAME')
-DB_USER = os.getenv('DATABASE_USER')
-DB_PASSWORD = os.getenv('DATABASE_PASSWORD')
-DB_HOST = os.getenv('DATABASE_HOST')
-DB_PORT = os.getenv('DATABASE_PORT')
+DATABASE_URL = os.getenv('DATABASE_URL') or os.getenv('POSTGRES_URL') or os.getenv('SUPABASE_DB_URL')
+parsed_db = None
 
-if DB_NAME and DB_USER and DB_PASSWORD:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': DB_NAME,
-            'USER': DB_USER,
-            'PASSWORD': DB_PASSWORD,
-            'HOST': DB_HOST or 'localhost',
-            'PORT': DB_PORT or '5432',
-        }
-    }
+if DATABASE_URL and DATABASE_URL.strip() and '[YOUR-PASSWORD]' not in DATABASE_URL and '<password>' not in DATABASE_URL.lower():
+    try:
+        import dj_database_url
+        parsed_db = dj_database_url.parse(
+            DATABASE_URL.strip(),
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require='sqlite' not in DATABASE_URL
+        )
+    except Exception:
+        parsed_db = None
+
+if parsed_db:
+    DATABASES = {'default': parsed_db}
 else:
-    # Fallback to SQLite for seamless local testing
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+    DB_NAME = os.getenv('DB_NAME') or os.getenv('DATABASE_NAME')
+    DB_USER = os.getenv('DB_USER') or os.getenv('DATABASE_USER')
+    DB_PASSWORD = os.getenv('DB_PASSWORD') or os.getenv('DATABASE_PASSWORD')
+    DB_HOST = os.getenv('DB_HOST') or os.getenv('DATABASE_HOST')
+    DB_PORT = os.getenv('DB_PORT') or os.getenv('DATABASE_PORT')
+
+    if DB_NAME and DB_USER and DB_PASSWORD:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': DB_NAME,
+                'USER': DB_USER,
+                'PASSWORD': DB_PASSWORD,
+                'HOST': DB_HOST or 'localhost',
+                'PORT': DB_PORT or '5432',
+                'OPTIONS': {
+                    'sslmode': 'require' if DB_HOST and DB_HOST != 'localhost' else 'prefer',
+                }
+            }
         }
-    }
+    else:
+        # Fallback to SQLite for seamless local testing
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 
 
 # Password validation
