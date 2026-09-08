@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { Lock, Mail, Shield, Stethoscope, UserCheck, ArrowRight, Activity, Calendar, HeartPulse } from 'lucide-react';
+import { ArogyaChatbot } from '../components/ArogyaChatbot';
 
 export const Login = () => {
   const [email, setEmail] = useState('dr.ananya@sanakahospital.com');
@@ -16,7 +17,8 @@ export const Login = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const data = await login(email, password);
+      const cleanEmail = email.trim().toLowerCase();
+      const data = await login(cleanEmail, password);
       showSuccess(`Welcome back, ${data.full_name}`);
       navigate('/dashboard');
     } catch (err) {
@@ -226,6 +228,9 @@ export const Login = () => {
           </div>
         </div>
       </div>
+
+      {/* Floating Ask Arogya Chatbot */}
+      <ArogyaChatbot isFloating={true} initialOpen={false} />
     </div>
   );
 };

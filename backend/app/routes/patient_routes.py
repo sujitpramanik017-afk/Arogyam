@@ -4,7 +4,7 @@ from sqlalchemy import or_, desc
 from typing import List, Optional
 import datetime
 from app.database import get_db
-from app.models import Patient, PatientCase, User
+from app.models import Patient, PatientCase, User, Appointment, Prescription, PrescriptionItem, MedicalHistory, VitalSigns
 from app.schemas import PatientOut, PatientCreate
 from app.auth.security import get_current_user, require_role
 from app.services.audit_service import log_audit_event
@@ -154,3 +154,47 @@ def update_patient(
         user=current_user
     )
     return PatientOut.from_orm(patient)
+
+@router.delete("/{patient_id}")
+def delete_patient(
+    patient_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role(["admin", "receptionist"]))
+):
+    patient = db.query(Patient).filter(Patient.id == patient_id).first()
+    if not patient:
+        raise HTTPException(status_code=404, detail="Patient not found")
+
+    patient_name = patient.full_name
+    patient_uhid = patient.patient_id
+
+    # 1. Delete Appointments
+    db.query(Appointment).filter(Appointment.patient_id == patient_id).delete(synchronize_session=False)
+
+    # 2. Delete Prescriptions and items
+    rx_list = db.query(Prescription).filter(Prescription.patient_id == patient_id).all()
+    for rx in rx_list:
+        db.query(PrescriptionItem).filter(PrescriptionItem.prescription_id == rx.id).delete(synchronize_session=False)
+        db.delete(rx)
+
+    # 3. Delete Cases (and their vitals/medical histories)
+    cases = db.query(PatientCase).filter(PatientCase.patient_id == patient_id).all()
+    for c in cases:
+        db.query(VitalSigns).filter(VitalSigns.case_id == c.id).delete(synchronize_session=False)
+        db.query(MedicalHistory).filter(MedicalHistory.case_id == c.id).delete(synchronize_session=False)
+        db.delete(c)
+
+    # 4. Delete Patient
+    db.delete(patient)
+    db.commit()
+
+    log_audit_event(
+        db=db,
+        action="DELETE_PATIENT",
+        entity_type="Patient",
+        entity_id=str(patient_id),
+        details=f"Deleted patient {patient_name} ({patient_uhid}) and associated medical records",
+        user=current_user
+    )
+    return {"message": f"Patient {patient_name} ({patient_uhid}) deleted successfully", "patient_id": patient_id}
+

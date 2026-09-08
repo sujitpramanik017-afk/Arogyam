@@ -1,10 +1,19 @@
 from fastapi import APIRouter, Depends
-from app.schemas import AISummaryRequest, AISummaryResponse, AIMissingInfoResponse, AINoteFormatRequest, AINoteFormatResponse
+from app.schemas import (
+    AISummaryRequest, AISummaryResponse, AIMissingInfoResponse,
+    AINoteFormatRequest, AINoteFormatResponse,
+    ArogyaChatRequest, ArogyaChatResponse
+)
 from app.services.ai_service import AIClinicalService
 from app.auth.security import get_current_user
 from app.models import User
 
-router = APIRouter(prefix="/ai", tags=["AI Clinical Assistant"])
+router = APIRouter(prefix="/ai", tags=["AI Clinical & FAQ Assistant"])
+
+@router.post("/arogya-chat", response_model=ArogyaChatResponse)
+def arogya_faq_chat(payload: ArogyaChatRequest):
+    result = AIClinicalService.arogya_chat(payload.message, payload.language or "auto")
+    return result
 
 @router.post("/summarize", response_model=AISummaryResponse)
 def summarize_case(payload: AISummaryRequest, current_user: User = Depends(get_current_user)):
@@ -20,3 +29,4 @@ def check_missing_info(payload: AISummaryRequest, current_user: User = Depends(g
 def format_raw_notes(payload: AINoteFormatRequest, current_user: User = Depends(get_current_user)):
     result = AIClinicalService.format_raw_notes(payload.raw_notes)
     return result
+

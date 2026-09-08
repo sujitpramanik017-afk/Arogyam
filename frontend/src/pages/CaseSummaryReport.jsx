@@ -114,11 +114,37 @@ export const CaseSummaryReport = () => {
             <div className="font-bold text-slate-800 uppercase tracking-wider text-[11px] bg-slate-100 px-2 py-0.5 border border-slate-200 rounded">
               2. Recorded Vital Signs
             </div>
-            <div className="p-2 border border-slate-200 rounded bg-white font-mono text-[11px] space-y-0.5">
-              <div>BP: <strong>{v?.blood_pressure_systolic || '--'}/{v?.blood_pressure_diastolic || '--'} mmHg</strong> · Pulse: <strong>{v?.heart_rate || '--'} bpm</strong></div>
-              <div>Temp: <strong>{v?.temperature || '--'}°F</strong> · SpO2: <strong>{v?.spo2 || '--'}%</strong></div>
-              <div>Weight: <strong>{v?.weight_kg || '--'} kg</strong> · Height: <strong>{v?.height_cm || '--'} cm</strong> · BMI: <strong>{v?.bmi || '--'}</strong></div>
-            </div>
+            {v && (v.blood_pressure_systolic || v.blood_pressure_diastolic || v.heart_rate || v.temperature || v.spo2 || v.weight_kg || v.height_cm || v.bmi) ? (
+              <div className="p-2 border border-slate-200 rounded bg-white font-mono text-[11px] space-y-0.5">
+                {(v.blood_pressure_systolic || v.blood_pressure_diastolic || v.heart_rate) && (
+                  <div>
+                    {(v.blood_pressure_systolic || v.blood_pressure_diastolic) && (
+                      <span>BP: <strong>{v.blood_pressure_systolic || '--'}/{v.blood_pressure_diastolic || '--'} mmHg</strong> </span>
+                    )}
+                    {v.heart_rate && (
+                      <span>· Pulse: <strong>{v.heart_rate} bpm</strong></span>
+                    )}
+                  </div>
+                )}
+                {(v.temperature || v.spo2) && (
+                  <div>
+                    {v.temperature && <span>Temp: <strong>{v.temperature}°F</strong> </span>}
+                    {v.spo2 && <span>{v.temperature ? '· ' : ''}SpO2: <strong>{v.spo2}%</strong></span>}
+                  </div>
+                )}
+                {(v.weight_kg || v.height_cm || v.bmi) && (
+                  <div>
+                    {v.weight_kg && <span>Weight: <strong>{v.weight_kg} kg</strong> </span>}
+                    {v.height_cm && <span>{v.weight_kg ? '· ' : ''}Height: <strong>{v.height_cm} cm</strong> </span>}
+                    {v.bmi && <span>{(v.weight_kg || v.height_cm) ? '· ' : ''}BMI: <strong>{v.bmi}</strong></span>}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="p-2 border border-slate-200 rounded bg-slate-50 text-[11px] text-slate-500 italic">
+                No vital signs recorded
+              </div>
+            )}
           </div>
 
           <div className="space-y-1">

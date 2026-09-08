@@ -119,22 +119,27 @@ def create_case(
     
     if case_in.vitals:
         v_data = case_in.vitals.dict()
-        bmi = calculate_bmi(v_data.get("weight_kg"), v_data.get("height_cm"))
-        vitals = VitalSigns(
-            case_id=new_case.id,
-            temperature=v_data.get("temperature"),
-            temperature_unit=v_data.get("temperature_unit", "F"),
-            blood_pressure_systolic=v_data.get("blood_pressure_systolic"),
-            blood_pressure_diastolic=v_data.get("blood_pressure_diastolic"),
-            heart_rate=v_data.get("heart_rate"),
-            respiratory_rate=v_data.get("respiratory_rate"),
-            spo2=v_data.get("spo2"),
-            weight_kg=v_data.get("weight_kg"),
-            height_cm=v_data.get("height_cm"),
-            bmi=bmi or v_data.get("bmi"),
-            pain_score=v_data.get("pain_score")
+        has_any_vital = any(
+            v_data.get(k) is not None and v_data.get(k) != ""
+            for k in ["temperature", "blood_pressure_systolic", "blood_pressure_diastolic", "heart_rate", "respiratory_rate", "spo2", "weight_kg", "height_cm", "pain_score"]
         )
-        db.add(vitals)
+        if has_any_vital:
+            bmi = calculate_bmi(v_data.get("weight_kg"), v_data.get("height_cm"))
+            vitals = VitalSigns(
+                case_id=new_case.id,
+                temperature=v_data.get("temperature"),
+                temperature_unit=v_data.get("temperature_unit", "F"),
+                blood_pressure_systolic=v_data.get("blood_pressure_systolic"),
+                blood_pressure_diastolic=v_data.get("blood_pressure_diastolic"),
+                heart_rate=v_data.get("heart_rate"),
+                respiratory_rate=v_data.get("respiratory_rate"),
+                spo2=v_data.get("spo2"),
+                weight_kg=v_data.get("weight_kg"),
+                height_cm=v_data.get("height_cm"),
+                bmi=bmi or v_data.get("bmi"),
+                pain_score=v_data.get("pain_score")
+            )
+            db.add(vitals)
         
     if case_in.medical_history:
         m_data = case_in.medical_history.dict()

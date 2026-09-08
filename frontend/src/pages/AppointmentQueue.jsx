@@ -4,6 +4,7 @@ import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { StatusBadge } from '../components/StatusBadge';
+import { getTodayLocalDate } from '../utils/date';
 import {
   Calendar,
   Clock,
@@ -15,7 +16,8 @@ import {
   X,
   Building2,
   Stethoscope,
-  UserPlus
+  UserPlus,
+  RotateCw
 } from 'lucide-react';
 
 export const AppointmentQueue = () => {
@@ -31,7 +33,7 @@ export const AppointmentQueue = () => {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState(getTodayLocalDate());
   const [selectedDoctor, setSelectedDoctor] = useState(user?.role === 'doctor' ? (user.doctor_id || '') : '');
   const [selectedStatus, setSelectedStatus] = useState('All');
 
@@ -43,7 +45,7 @@ export const AppointmentQueue = () => {
     patient_id: patientIdParam ? parseInt(patientIdParam) : '',
     doctor_id: '',
     department_id: '',
-    appointment_date: new Date().toISOString().split('T')[0],
+    appointment_date: getTodayLocalDate(),
     time_slot: '10:00 AM - 10:30 AM',
     reason_for_visit: '',
   });
@@ -72,7 +74,7 @@ export const AppointmentQueue = () => {
       const [docs, depts, pts] = await Promise.all([
         api.getDoctors(),
         api.getDepartments(),
-        api.getPatients({ limit: 100 })
+        api.getPatients({ limit: 200 })
       ]);
       setDoctors(docs || []);
       setDepartments(depts || []);
@@ -94,8 +96,8 @@ export const AppointmentQueue = () => {
     setLoading(true);
     try {
       const data = await api.getAppointments({
-        date: selectedDate,
-        doctor_id: selectedDoctor || undefined,
+        date: selectedDate === 'All' ? undefined : selectedDate,
+        doctor_id: selectedDoctor ? parseInt(selectedDoctor) : undefined,
         status: selectedStatus,
       });
       setAppointments(data || []);
@@ -132,7 +134,7 @@ export const AppointmentQueue = () => {
         targetPatientId = created.id;
         showSuccess(`Patient ${created.full_name} registered (${created.patient_id})!`);
         // Refresh patients list
-        const updatedPts = await api.getPatients({ limit: 100 });
+        const updatedPts = await api.getPatients({ limit: 200 });
         setPatients(updatedPts || []);
       } catch (err) {
         showError('Failed to quick-register patient: ' + err.message);
@@ -163,7 +165,12 @@ export const AppointmentQueue = () => {
       showSuccess('Consultation token scheduled successfully!');
       setShowModal(false);
       setIsQuickRegister(false);
-      loadAppointments();
+      // Ensure the view date matches the booked appointment date so user immediately sees it
+      if (selectedDate !== 'All' && selectedDate !== payload.appointment_date) {
+        setSelectedDate(payload.appointment_date);
+      } else {
+        loadAppointments();
+      }
     } catch (e) {
       showError(e.message || 'Failed to book appointment');
     }
@@ -199,12 +206,36 @@ export const AppointmentQueue = () => {
         <div className="flex flex-wrap items-center gap-3">
           <div>
             <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Date</label>
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              className="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900"
-            />
+            <div className="flex items-center gap-1">
+              <input
+                type="date"
+                value={selectedDate === 'All' ? '' : selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value || 'All')}
+                className="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900"
+              />
+              <button
+                type="button"
+                onClick={() => setSelectedDate(getTodayLocalDate())}
+                className={`px-2 py-1.5 rounded-lg text-xs font-medium transition ${
+                  selectedDate === getTodayLocalDate()
+                    ? 'bg-blue-600 text-white font-bold'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                Today
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedDate('All')}
+                className={`px-2 py-1.5 rounded-lg text-xs font-medium transition ${
+                  selectedDate === 'All'
+                    ? 'bg-blue-600 text-white font-bold'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                All Dates
+              </button>
+            </div>
           </div>
 
           <div>

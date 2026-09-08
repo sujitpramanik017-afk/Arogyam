@@ -52,18 +52,34 @@ export const AdminDashboard = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            to="/doctors"
+            className="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg shadow-xs transition flex items-center gap-1.5"
+          >
+            <Stethoscope className="w-3.5 h-3.5" />
+            <span>Manage Medical Staff</span>
+          </Link>
+          <Link
+            to="/patients"
+            className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg shadow-xs transition flex items-center gap-1.5"
+          >
+            <Users className="w-3.5 h-3.5" />
+            <span>Patient Directory</span>
+          </Link>
           <Link
             to="/departments"
-            className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg shadow-xs transition"
+            className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg border border-slate-300 transition flex items-center gap-1.5"
           >
-            Manage Departments
+            <Building2 className="w-3.5 h-3.5" />
+            <span>Departments</span>
           </Link>
           <Link
             to="/audit-logs"
-            className="px-3.5 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-lg shadow-xs transition"
+            className="px-3.5 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-lg shadow-xs transition flex items-center gap-1.5"
           >
-            System Audit Trail
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>Audit Trail</span>
           </Link>
         </div>
       </div>

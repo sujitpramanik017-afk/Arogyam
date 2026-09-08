@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { StatusBadge } from '../components/StatusBadge';
+import { getTodayLocalDate } from '../utils/date';
 import {
   Users,
   Calendar,
@@ -14,7 +15,9 @@ import {
   CheckCircle2,
   AlertCircle,
   Activity,
-  FileText
+  FileText,
+  RotateCw,
+  Filter
 } from 'lucide-react';
 
 export const DoctorDashboard = () => {
@@ -22,21 +25,39 @@ export const DoctorDashboard = () => {
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
   const [recentCases, setRecentCases] = useState([]);
+  const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedDate, setSelectedDate] = useState(getTodayLocalDate());
+  const [selectedDoctorId, setSelectedDoctorId] = useState(user?.doctor_id || '');
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  useEffect(() => {
+    if (user?.doctor_id && !selectedDoctorId) {
+      setSelectedDoctorId(user.doctor_id);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    api.getDoctors().then((docs) => setDoctors(docs || [])).catch(console.error);
+  }, []);
 
   useEffect(() => {
     loadDoctorData();
-  }, [user]);
+  }, [user, selectedDate, selectedDoctorId]);
 
   const loadDoctorData = async () => {
     setLoading(true);
     try {
+      const activeDocId = selectedDoctorId || user?.doctor_id || undefined;
       const [apptsData, casesData] = await Promise.all([
-        api.getAppointments({ doctor_id: user?.doctor_id, date: todayStr }),
-        api.getCases({ doctor_id: user?.doctor_id, limit: 6 })
+        api.getAppointments({
+          doctor_id: activeDocId,
+          date: selectedDate === 'All' ? undefined : selectedDate
+        }),
+        api.getCases({
+          doctor_id: activeDocId,
+          limit: 10
+        })
       ]);
       setAppointments(apptsData || []);
       setRecentCases(casesData || []);
@@ -137,26 +158,92 @@ export const DoctorDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Today's OPD Queue */}
         <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-xs flex flex-col">
-          <div className="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <span>Today's OPD Queue</span>
-                <span className="bg-blue-100 text-blue-800 text-[10px] font-mono px-2 py-0.5 rounded-full font-bold">
-                  {appointments.length}
-                </span>
-              </h2>
-              <p className="text-xs text-slate-500">Live consultation token list for today</p>
+          <div className="p-4 border-b border-slate-200 flex flex-col gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <span>OPD Consultation Queue</span>
+                  <span className="bg-blue-100 text-blue-800 text-[10px] font-mono px-2 py-0.5 rounded-full font-bold">
+                    {appointments.length}
+                  </span>
+                </h2>
+                <p className="text-xs text-slate-500">Live consultation token list</p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={loadDoctorData}
+                  disabled={loading}
+                  title="Refresh Consultation Queue"
+                  className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg border border-slate-200 transition cursor-pointer disabled:opacity-50"
+                >
+                  <RotateCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+                </button>
+
+                <div className="relative w-full sm:w-56">
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search patient or ID..."
+                    className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
             </div>
 
-            <div className="relative w-full sm:w-64">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search patient name or ID..."
-                className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
-              />
+            {/* Sub Filter Row */}
+            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 text-xs">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[11px] font-semibold text-slate-500">Date:</span>
+                <input
+                  type="date"
+                  value={selectedDate === 'All' ? '' : selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value || 'All')}
+                  className="px-2 py-1 bg-slate-50 border border-slate-200 rounded text-xs text-slate-800"
+                />
+                <button
+                  type="button"
+                  onClick={() => setSelectedDate(getTodayLocalDate())}
+                  className={`px-2 py-1 rounded text-[11px] font-medium transition ${
+                    selectedDate === getTodayLocalDate()
+                      ? 'bg-blue-600 text-white font-bold'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  Today
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedDate('All')}
+                  className={`px-2 py-1 rounded text-[11px] font-medium transition ${
+                    selectedDate === 'All'
+                      ? 'bg-blue-600 text-white font-bold'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  All Dates
+                </button>
+              </div>
+
+              {user?.role === 'admin' && doctors.length > 0 && (
+                <div className="flex items-center gap-1.5 ml-auto">
+                  <span className="text-[11px] font-semibold text-slate-500">Doctor:</span>
+                  <select
+                    value={selectedDoctorId}
+                    onChange={(e) => setSelectedDoctorId(e.target.value ? parseInt(e.target.value) : '')}
+                    className="px-2 py-1 bg-slate-50 border border-slate-200 rounded text-xs text-slate-800"
+                  >
+                    <option value="">All Doctors</option>
+                    {doctors.map((d) => (
+                      <option key={d.id} value={d.id}>
+                        Dr. {d.full_name} ({d.specialization})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
           </div>
 

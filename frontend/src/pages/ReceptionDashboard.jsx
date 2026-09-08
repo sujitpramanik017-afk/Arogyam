@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { api } from '../services/api';
 import { StatusBadge } from '../components/StatusBadge';
 import { useToast } from '../context/ToastContext';
+import { getTodayLocalDate } from '../utils/date';
 import {
   UserPlus,
   Calendar,
@@ -12,7 +13,8 @@ import {
   CheckCircle2,
   Stethoscope,
   PlusCircle,
-  ArrowRight
+  ArrowRight,
+  RotateCw
 } from 'lucide-react';
 
 export const ReceptionDashboard = () => {
@@ -20,20 +22,19 @@ export const ReceptionDashboard = () => {
   const [recentPatients, setRecentPatients] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(getTodayLocalDate());
   const { showSuccess, showError } = useToast();
-
-  const todayStr = new Date().toISOString().split('T')[0];
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [selectedDate]);
 
   const loadData = async () => {
     setLoading(true);
     try {
       const [appts, pts, docs] = await Promise.all([
-        api.getAppointments({ date: todayStr }),
-        api.getPatients({ limit: 6 }),
+        api.getAppointments({ date: selectedDate === 'All' ? undefined : selectedDate }),
+        api.getPatients({ limit: 10 }),
         api.getDoctors({ available_only: true })
       ]);
       setAppointments(appts || []);
@@ -121,14 +122,46 @@ export const ReceptionDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Today's Appointments with Check-in action */}
         <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-xs flex flex-col">
-          <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+          <div className="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h2 className="text-sm font-bold text-slate-900">Today's OPD Queue & Tokens</h2>
+              <h2 className="text-sm font-bold text-slate-900">OPD Queue & Check-In Tokens</h2>
               <p className="text-xs text-slate-500">Check-in arriving patients for doctor consult</p>
             </div>
-            <Link to="/appointments" className="text-xs text-blue-600 font-semibold hover:underline">
-              View All
-            </Link>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={loadData}
+                disabled={loading}
+                title="Refresh Queue"
+                className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg border border-slate-200 transition cursor-pointer disabled:opacity-50"
+              >
+                <RotateCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedDate(getTodayLocalDate())}
+                className={`px-2 py-1 rounded-lg text-xs font-medium transition ${
+                  selectedDate === getTodayLocalDate()
+                    ? 'bg-blue-600 text-white font-bold'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                Today
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedDate('All')}
+                className={`px-2 py-1 rounded-lg text-xs font-medium transition ${
+                  selectedDate === 'All'
+                    ? 'bg-blue-600 text-white font-bold'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                All Dates
+              </button>
+              <Link to="/appointments" className="text-xs text-blue-600 font-semibold hover:underline ml-1">
+                Full Queue →
+              </Link>
+            </div>
           </div>
 
           <div className="p-4 flex-1 divide-y divide-slate-100">

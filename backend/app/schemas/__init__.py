@@ -61,6 +61,64 @@ class DepartmentOut(DepartmentBase):
     class Config:
         from_attributes = True
 
+class DoctorCreate(BaseModel):
+    full_name: str
+    email: str
+    password: Optional[str] = "Doctor@2026"
+    department_id: int
+    specialization: str
+    qualification: str
+    room_number: Optional[str] = None
+    contact_number: Optional[str] = None
+    reg_number: Optional[str] = None
+    is_available: bool = True
+
+class DoctorUpdate(BaseModel):
+    full_name: Optional[str] = None
+    email: Optional[str] = None
+    password: Optional[str] = None
+    department_id: Optional[int] = None
+    specialization: Optional[str] = None
+    qualification: Optional[str] = None
+    room_number: Optional[str] = None
+    contact_number: Optional[str] = None
+    reg_number: Optional[str] = None
+    is_available: Optional[bool] = None
+
+class StaffOut(BaseModel):
+    id: int
+    email: str
+    full_name: str
+    role: str
+    is_active: bool
+    created_at: datetime.datetime
+    doctor_id: Optional[int] = None
+    department_id: Optional[int] = None
+    department_name: Optional[str] = None
+    specialization: Optional[str] = None
+    qualification: Optional[str] = None
+    room_number: Optional[str] = None
+    contact_number: Optional[str] = None
+    reg_number: Optional[str] = None
+    is_available: Optional[bool] = None
+
+    class Config:
+        from_attributes = True
+
+class StaffUpdate(BaseModel):
+    full_name: Optional[str] = None
+    email: Optional[str] = None
+    password: Optional[str] = None
+    role: Optional[str] = None
+    is_active: Optional[bool] = None
+    department_id: Optional[int] = None
+    specialization: Optional[str] = None
+    qualification: Optional[str] = None
+    room_number: Optional[str] = None
+    contact_number: Optional[str] = None
+    reg_number: Optional[str] = None
+    is_available: Optional[bool] = None
+
 # --- Doctor Schemas ---
 class DoctorOut(BaseModel):
     id: int
@@ -379,6 +437,17 @@ class AINoteFormatResponse(BaseModel):
     suggested_assessment: Optional[str] = None
     suggested_plan: Optional[str] = None
     disclaimer: str = "AI-structured note draft ? Requires physician confirmation."
+
+class ArogyaChatRequest(BaseModel):
+    message: str
+    language: Optional[str] = "auto" # "auto", "en", "bn"
+
+class ArogyaChatResponse(BaseModel):
+    reply: str
+    language: str
+    is_medical_warning: bool = False
+    suggested_actions: Optional[List[str]] = None
+    hospital_phone: str = "+91-9083284529"
 
 # --- Audit & Analytics Schemas ---
 class AuditLogOut(BaseModel):

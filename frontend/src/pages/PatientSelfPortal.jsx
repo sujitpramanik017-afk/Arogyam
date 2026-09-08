@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { useToast } from '../context/ToastContext';
+import { getTodayLocalDate } from '../utils/date';
+import { ArogyaChatbot } from '../components/ArogyaChatbot';
 import {
   Calendar,
   Clock,
@@ -17,14 +19,17 @@ import {
   ArrowRight,
   Activity,
   ChevronRight,
-  Search
+  Search,
+  Sparkles,
+  Bot,
+  HelpCircle
 } from 'lucide-react';
 
 export const PatientSelfPortal = () => {
   const navigate = useNavigate();
   const { showSuccess, showError } = useToast();
 
-  const [activeMode, setActiveMode] = useState('book'); // 'book' or 'records'
+  const [activeMode, setActiveMode] = useState('book'); // 'book', 'records', or 'arogya'
   const [doctors, setDoctors] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [submitting, setSubmitting] = useState(false);
@@ -50,7 +55,7 @@ export const PatientSelfPortal = () => {
     current_medications: '',
     doctor_id: '',
     department_id: '',
-    appointment_date: new Date().toISOString().split('T')[0],
+    appointment_date: getTodayLocalDate(),
     time_slot: '10:00 AM - 10:30 AM',
   });
 
@@ -155,43 +160,98 @@ export const PatientSelfPortal = () => {
           </div>
         </div>
 
-        <Link
-          to="/login"
-          className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg border border-slate-700 transition flex items-center gap-1.5"
-        >
-          <span>Staff Login</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setActiveMode('arogya')}
+            className="px-3 py-1.5 bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 text-xs font-semibold rounded-lg border border-emerald-500/40 transition flex items-center gap-1.5 cursor-pointer"
+          >
+            <span>🌿 Ask Arogya FAQ</span>
+          </button>
+          <Link
+            to="/login"
+            className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg border border-slate-700 transition flex items-center gap-1.5"
+          >
+            <span>Staff Login</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
       </div>
 
       {/* Main Container */}
-      <div className="max-w-4xl mx-auto w-full flex-1">
-        {/* Mode Selector Tabs */}
-        <div className="flex border-b border-slate-800 mb-6 gap-2">
-          <button
-            onClick={() => { setActiveMode('book'); setConfirmedBooking(null); }}
-            className={`px-4 py-2.5 text-xs font-bold rounded-t-lg transition flex items-center gap-2 cursor-pointer ${
-              activeMode === 'book'
-                ? 'bg-blue-600 text-white border-b-2 border-blue-400'
-                : 'bg-slate-800/60 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
-            }`}
-          >
-            <Calendar className="w-4 h-4" />
-            <span>1. Book OPD Appointment & Enter Symptoms</span>
-          </button>
+      <div className="max-w-7xl mx-auto w-full flex-1">
+        {/* Hospital Hero Highlights Banner */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+          <div className="bg-slate-800/80 border border-slate-700/80 p-3 rounded-xl flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+              <Activity className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white">24x7 Emergency</div>
+              <div className="text-[10px] text-slate-400">Casualty & Trauma Care</div>
+            </div>
+          </div>
 
-          <button
-            onClick={() => setActiveMode('records')}
-            className={`px-4 py-2.5 text-xs font-bold rounded-t-lg transition flex items-center gap-2 cursor-pointer ${
-              activeMode === 'records'
-                ? 'bg-blue-600 text-white border-b-2 border-blue-400'
-                : 'bg-slate-800/60 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
-            }`}
-          >
-            <Search className="w-4 h-4" />
-            <span>2. Check My Appointments & Prescriptions</span>
-          </button>
+          <div className="bg-slate-800/80 border border-slate-700/80 p-3 rounded-xl flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
+              <Calendar className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white">Online OPD Tokens</div>
+              <div className="text-[10px] text-slate-400">Self-Booking Portal</div>
+            </div>
+          </div>
+
+          <div className="bg-slate-800/80 border border-slate-700/80 p-3 rounded-xl flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0">
+              <Stethoscope className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white">Specialist Doctors</div>
+              <div className="text-[10px] text-slate-400">8+ Medical Departments</div>
+            </div>
+          </div>
+
+          <div className="bg-slate-800/80 border border-slate-700/80 p-3 rounded-xl flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center shrink-0">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white">Arogya AI Assistant</div>
+              <div className="text-[10px] text-slate-400">Bilingual Hospital FAQ</div>
+            </div>
+          </div>
         </div>
+
+        {/* 2-Column Homepage Grid: Left Services + Right Arogya Chatbot */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* Left Column (7/12): Patient Portal Services & Booking */}
+          <div className="lg:col-span-7 space-y-4">
+            {/* Mode Selector Tabs */}
+            <div className="flex border-b border-slate-800 gap-2">
+              <button
+                onClick={() => { setActiveMode('book'); setConfirmedBooking(null); }}
+                className={`px-4 py-2.5 text-xs font-bold rounded-t-lg transition flex items-center gap-2 cursor-pointer ${
+                  activeMode === 'book'
+                    ? 'bg-blue-600 text-white border-b-2 border-blue-400'
+                    : 'bg-slate-800/60 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                }`}
+              >
+                <Calendar className="w-4 h-4" />
+                <span>1. Book OPD Token</span>
+              </button>
+
+              <button
+                onClick={() => setActiveMode('records')}
+                className={`px-4 py-2.5 text-xs font-bold rounded-t-lg transition flex items-center gap-2 cursor-pointer ${
+                  activeMode === 'records'
+                    ? 'bg-blue-600 text-white border-b-2 border-blue-400'
+                    : 'bg-slate-800/60 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                }`}
+              >
+                <Search className="w-4 h-4" />
+                <span>2. My Prescriptions & Records</span>
+              </button>
+            </div>
 
         {/* MODE 1: BOOKING FORM */}
         {activeMode === 'book' && !confirmedBooking && (
@@ -562,9 +622,46 @@ export const PatientSelfPortal = () => {
         )}
       </div>
 
-      <div className="max-w-5xl mx-auto w-full text-center text-[11px] text-slate-500 pt-6 border-t border-slate-800 mt-6">
-        Sanaka Hospital Patient Portal · Shri Ramkrishna Institute of Medical Sciences · Malandighi, Durgapur
+      {/* Right Column (5/12): Live Embedded Arogya AI Assistant Panel */}
+      <div className="lg:col-span-5 space-y-4">
+        <div className="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 p-4 rounded-2xl shadow-xl space-y-3">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">🌿</span>
+              <div>
+                <h2 className="text-sm font-bold text-white flex items-center gap-1.5">
+                  <span>Ask Arogya</span>
+                  <span className="text-[9px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-mono font-bold">
+                    LIVE AI FAQ
+                  </span>
+                </h2>
+                <p className="text-[11px] text-emerald-400">Hospital FAQ, OPD timings, doctors & facilities</p>
+              </div>
+            </div>
+            <a
+              href="tel:+919083284529"
+              className="px-2.5 py-1 bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 border border-emerald-500/40 rounded-lg text-[11px] font-bold flex items-center gap-1 transition"
+            >
+              <Phone className="w-3 h-3" />
+              <span>Call Helpline</span>
+            </a>
+          </div>
+
+          {/* Embedded Chatbot Component */}
+          <ArogyaChatbot isFloating={false} />
+        </div>
       </div>
     </div>
+  </div>
+
+  {/* Footer */}
+  <div className="max-w-7xl mx-auto w-full text-center text-[11px] text-slate-500 pt-6 border-t border-slate-800 mt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+    <span>Sanaka Hospital (SRIMS) · Malandighi, Durgapur, West Bengal - 713212</span>
+    <span>Helpline: <strong className="text-slate-300">+91-9083284529</strong> · 24x7 Emergency Services</span>
+  </div>
+
+  {/* Floating Ask Arogya Chatbot */}
+  <ArogyaChatbot isFloating={true} initialOpen={false} />
+</div>
   );
 };

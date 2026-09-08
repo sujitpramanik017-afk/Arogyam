@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
+import { ArogyaChatbot } from './ArogyaChatbot';
 
 export const Layout = () => {
   return (
@@ -13,6 +14,7 @@ export const Layout = () => {
           <Outlet />
         </main>
       </div>
+      <ArogyaChatbot isFloating={true} initialOpen={false} />
     </div>
   );
 };

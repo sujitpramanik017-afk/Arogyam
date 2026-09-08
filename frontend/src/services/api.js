@@ -49,7 +49,7 @@ export const api = {
   // Patients
   getPatients: (params = {}) => {
     const query = new URLSearchParams();
-    if (params.search) query.append('search', params.search);
+    if (params.search && params.search.trim()) query.append('search', params.search.trim());
     if (params.gender && params.gender !== 'All') query.append('gender', params.gender);
     if (params.blood_group && params.blood_group !== 'All') query.append('blood_group', params.blood_group);
     if (params.limit) query.append('limit', params.limit);
@@ -69,13 +69,17 @@ export const api = {
       method: 'PUT',
       body: JSON.stringify(data),
     }),
+  deletePatient: (id) =>
+    request(`/patients/${id}`, {
+      method: 'DELETE',
+    }),
 
   // Cases
   getCases: (params = {}) => {
     const query = new URLSearchParams();
     if (params.patient_id) query.append('patient_id', params.patient_id);
-    if (params.doctor_id) query.append('doctor_id', params.doctor_id);
-    if (params.department_id) query.append('department_id', params.department_id);
+    if (params.doctor_id && params.doctor_id !== 'undefined' && params.doctor_id !== 'null') query.append('doctor_id', params.doctor_id);
+    if (params.department_id && params.department_id !== 'undefined' && params.department_id !== 'null') query.append('department_id', params.department_id);
     if (params.status && params.status !== 'All') query.append('status', params.status);
     if (params.limit) query.append('limit', params.limit);
     const qs = query.toString();
@@ -96,10 +100,11 @@ export const api = {
   // Appointments
   getAppointments: (params = {}) => {
     const query = new URLSearchParams();
-    if (params.date) query.append('date', params.date);
-    if (params.doctor_id) query.append('doctor_id', params.doctor_id);
-    if (params.department_id) query.append('department_id', params.department_id);
+    if (params.date && params.date !== 'All') query.append('date', params.date);
+    if (params.doctor_id && params.doctor_id !== 'undefined' && params.doctor_id !== 'null') query.append('doctor_id', params.doctor_id);
+    if (params.department_id && params.department_id !== 'undefined' && params.department_id !== 'null') query.append('department_id', params.department_id);
     if (params.status && params.status !== 'All') query.append('status', params.status);
+    if (params.limit) query.append('limit', params.limit);
     const qs = query.toString();
     return request(`/appointments${qs ? `?${qs}` : ''}`);
   },
@@ -118,21 +123,52 @@ export const api = {
   getPrescriptions: (params = {}) => {
     const query = new URLSearchParams();
     if (params.patient_id) query.append('patient_id', params.patient_id);
-    if (params.doctor_id) query.append('doctor_id', params.doctor_id);
+    if (params.doctor_id && params.doctor_id !== 'undefined' && params.doctor_id !== 'null') query.append('doctor_id', params.doctor_id);
     const qs = query.toString();
     return request(`/prescriptions${qs ? `?${qs}` : ''}`);
   },
   getPrescription: (id) => request(`/prescriptions/${id}`),
 
-  // Doctors & Departments
+  // Doctors & Medical Staff
   getDoctors: (params = {}) => {
     const query = new URLSearchParams();
-    if (params.department_id) query.append('department_id', params.department_id);
+    if (params.department_id && params.department_id !== 'undefined' && params.department_id !== 'null') query.append('department_id', params.department_id);
     if (params.available_only) query.append('available_only', 'true');
     const qs = query.toString();
     return request(`/doctors${qs ? `?${qs}` : ''}`);
   },
   getDoctor: (id) => request(`/doctors/${id}`),
+  createDoctor: (data) =>
+    request('/doctors', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  updateDoctor: (id, data) =>
+    request(`/doctors/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+  deleteDoctor: (id) =>
+    request(`/doctors/${id}`, {
+      method: 'DELETE',
+    }),
+  getStaff: (role) => request(`/admin/staff${role && role !== 'All' ? `?role=${role}` : ''}`),
+  createStaff: (data) =>
+    request('/admin/staff', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  updateStaff: (id, data) =>
+    request(`/admin/staff/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+  deleteStaff: (id) =>
+    request(`/admin/staff/${id}`, {
+      method: 'DELETE',
+    }),
+
+  // Departments
   getDepartments: () => request('/departments'),
   createDepartment: (data) =>
     request('/departments', {
@@ -155,6 +191,11 @@ export const api = {
     request('/ai/format-notes', {
       method: 'POST',
       body: JSON.stringify({ raw_notes }),
+    }),
+  arogyaChat: (message, language = 'auto') =>
+    request('/ai/arogya-chat', {
+      method: 'POST',
+      body: JSON.stringify({ message, language }),
     }),
 
   // Admin & Analytics

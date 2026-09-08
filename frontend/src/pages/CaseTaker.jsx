@@ -50,17 +50,17 @@ export const CaseTaker = () => {
     follow_up_instructions: '',
     raw_notes: '',
     vitals: {
-      temperature: 98.4,
+      temperature: '',
       temperature_unit: '°F',
-      blood_pressure_systolic: 120,
-      blood_pressure_diastolic: 80,
-      heart_rate: 72,
-      respiratory_rate: 16,
-      spo2: 98,
-      weight_kg: 65,
-      height_cm: 170,
-      bmi: 22.5,
-      pain_score: 0,
+      blood_pressure_systolic: '',
+      blood_pressure_diastolic: '',
+      heart_rate: '',
+      respiratory_rate: '',
+      spo2: '',
+      weight_kg: '',
+      height_cm: '',
+      bmi: '',
+      pain_score: '',
     },
     medical_history: {
       past_diseases: '',
@@ -69,8 +69,8 @@ export const CaseTaker = () => {
       drug_allergies: '',
       food_environmental_allergies: '',
       family_history: '',
-      smoking_history: 'Non-smoker',
-      alcohol_history: 'Non-alcoholic',
+      smoking_history: '',
+      alcohol_history: '',
       other_lifestyle: '',
     },
     prescription: {
@@ -114,8 +114,8 @@ export const CaseTaker = () => {
   }, [selectedPatientId]);
 
   useEffect(() => {
-    const w = caseData.vitals.weight_kg;
-    const h = caseData.vitals.height_cm;
+    const w = parseFloat(caseData.vitals.weight_kg);
+    const h = parseFloat(caseData.vitals.height_cm);
     if (w && h && h > 0) {
       const hm = h / 100;
       const calculatedBmi = parseFloat((w / (hm * hm)).toFixed(1));
@@ -123,6 +123,13 @@ export const CaseTaker = () => {
         ...prev,
         vitals: { ...prev.vitals, bmi: calculatedBmi },
       }));
+    } else {
+      setCaseData((prev) => {
+        if (prev.vitals.bmi) {
+          return { ...prev, vitals: { ...prev.vitals, bmi: '' } };
+        }
+        return prev;
+      });
     }
   }, [caseData.vitals.weight_kg, caseData.vitals.height_cm]);
 
@@ -219,12 +226,42 @@ export const CaseTaker = () => {
 
     setSaving(true);
     try {
+      const rawV = caseData.vitals;
+      const hasAnyVital = Boolean(
+        rawV.temperature ||
+        rawV.blood_pressure_systolic ||
+        rawV.blood_pressure_diastolic ||
+        rawV.heart_rate ||
+        rawV.respiratory_rate ||
+        rawV.spo2 ||
+        rawV.weight_kg ||
+        rawV.height_cm ||
+        (rawV.pain_score !== '' && rawV.pain_score !== null && rawV.pain_score !== undefined && rawV.pain_score !== 0)
+      );
+
+      const cleanVitals = hasAnyVital
+        ? {
+            temperature: rawV.temperature ? parseFloat(rawV.temperature) : null,
+            temperature_unit: rawV.temperature_unit || '°F',
+            blood_pressure_systolic: rawV.blood_pressure_systolic ? parseInt(rawV.blood_pressure_systolic) : null,
+            blood_pressure_diastolic: rawV.blood_pressure_diastolic ? parseInt(rawV.blood_pressure_diastolic) : null,
+            heart_rate: rawV.heart_rate ? parseInt(rawV.heart_rate) : null,
+            respiratory_rate: rawV.respiratory_rate ? parseInt(rawV.respiratory_rate) : null,
+            spo2: rawV.spo2 ? parseFloat(rawV.spo2) : null,
+            weight_kg: rawV.weight_kg ? parseFloat(rawV.weight_kg) : null,
+            height_cm: rawV.height_cm ? parseFloat(rawV.height_cm) : null,
+            bmi: rawV.bmi ? parseFloat(rawV.bmi) : null,
+            pain_score: (rawV.pain_score !== '' && rawV.pain_score !== null) ? parseInt(rawV.pain_score) : null,
+          }
+        : null;
+
       const payload = {
         ...caseData,
         status: finalStatus,
+        vitals: cleanVitals,
         prescription: {
           ...caseData.prescription,
-          items: caseData.prescription.items.filter((m) => m.medicine_name.trim() !== ''),
+          items: caseData.prescription.items.filter((m) => m.medicine_name && m.medicine_name.trim() !== ''),
         },
       };
 

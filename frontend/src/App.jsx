@@ -28,6 +28,7 @@ export const App = () => {
         <ToastProvider>
           <Routes>
             {/* Public Routes */}
+            <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/portal" element={<PatientSelfPortal />} />
             <Route path="/book" element={<PatientSelfPortal />} />
@@ -35,7 +36,6 @@ export const App = () => {
             {/* Protected Hospital Workspace Routes */}
             <Route element={<ProtectedRoute />}>
               <Route element={<Layout />}>
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/dashboard" element={<Dashboard />} />
 
                 {/* Patient Management */}
