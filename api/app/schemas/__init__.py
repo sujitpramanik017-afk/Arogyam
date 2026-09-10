@@ -378,7 +378,7 @@ class PatientCaseOut(BaseModel):
 class AppointmentCreate(BaseModel):
     patient_id: int
     doctor_id: int
-    department_id: int
+    department_id: Optional[int] = None
     appointment_date: str # YYYY-MM-DD
     time_slot: str
     reason_for_visit: Optional[str] = None

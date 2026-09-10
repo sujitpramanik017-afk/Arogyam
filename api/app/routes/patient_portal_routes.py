@@ -46,94 +46,101 @@ class PatientLookupRequest(BaseModel):
 
 @router.post("/book-appointment")
 def book_appointment_self(payload: PatientSelfBookingRequest, db: Session = Depends(get_db)):
-    # 1. Check if patient already exists by phone
-    patient = db.query(Patient).filter(Patient.phone == payload.phone.strip()).first()
-    
-    if not patient:
-        patient_id_custom = generate_next_patient_id(db)
-        patient = Patient(
-            patient_id=patient_id_custom,
-            full_name=payload.full_name.strip(),
-            dob=payload.dob,
-            gender=payload.gender,
-            phone=payload.phone.strip(),
-            email=payload.email.strip() if payload.email else None,
-            address=payload.address.strip(),
-            city=payload.city or "Durgapur",
-            state=payload.state or "West Bengal",
-            pincode=payload.pincode or "713212",
-            emergency_contact_name=payload.emergency_contact_name,
-            emergency_contact_phone=payload.emergency_contact_phone,
-            emergency_relation="Family",
-            blood_group=payload.blood_group,
-            known_allergies=payload.known_allergies or "None reported",
-        )
-        db.add(patient)
-        db.flush()
-    else:
-        # Update allergies or details if supplied
-        if payload.known_allergies:
-            patient.known_allergies = payload.known_allergies
+    try:
+        # 1. Check if patient already exists by phone
+        patient = db.query(Patient).filter(Patient.phone == payload.phone.strip()).first()
+        
+        if not patient:
+            patient_id_custom = generate_next_patient_id(db)
+            patient = Patient(
+                patient_id=patient_id_custom,
+                full_name=payload.full_name.strip(),
+                dob=payload.dob,
+                gender=payload.gender,
+                phone=payload.phone.strip(),
+                email=payload.email.strip() if payload.email else None,
+                address=payload.address.strip(),
+                city=payload.city or "Kolkata",
+                state=payload.state or "West Bengal",
+                pincode=payload.pincode or "700091",
+                emergency_contact_name=payload.emergency_contact_name,
+                emergency_contact_phone=payload.emergency_contact_phone,
+                emergency_relation="Family",
+                blood_group=payload.blood_group,
+                known_allergies=payload.known_allergies or "None reported",
+            )
+            db.add(patient)
+            db.flush()
+        else:
+            # Update allergies or details if supplied
+            if payload.known_allergies:
+                patient.known_allergies = payload.known_allergies
+                
+        # 2. Verify Doctor
+        doctor = db.query(Doctor).filter(Doctor.id == payload.doctor_id).first()
+        if not doctor:
+            raise HTTPException(status_code=404, detail="Selected doctor not found")
             
-    # 2. Verify Doctor
-    doctor = db.query(Doctor).filter(Doctor.id == payload.doctor_id).first()
-    if not doctor:
-        raise HTTPException(status_code=404, detail="Selected doctor not found")
+        dept_id = payload.department_id or doctor.department_id or 1
         
-    dept_id = payload.department_id or doctor.department_id
-    
-    # 3. Compute token number
-    existing_tokens = db.query(Appointment).filter(
-        Appointment.doctor_id == payload.doctor_id,
-        Appointment.appointment_date == payload.appointment_date
-    ).count()
-    token_num = existing_tokens + 1
-    
-    # 4. Create appointment
-    appt = Appointment(
-        patient_id=patient.id,
-        doctor_id=doctor.id,
-        department_id=dept_id,
-        appointment_date=payload.appointment_date,
-        time_slot=payload.time_slot,
-        token_number=token_num,
-        reason_for_visit=f"Online Self-Booking: {payload.chief_complaint}",
-        status="checked_in" # Instantly checked-in so it appears in Doctor's live active queue
-    )
-    db.add(appt)
-    db.flush()
-    
-    # 5. Pre-create a draft clinical case sheet with the patient's submitted data
-    case_num = generate_next_case_number(db)
-    new_case = PatientCase(
-        case_number=case_num,
-        patient_id=patient.id,
-        doctor_id=doctor.id,
-        department_id=dept_id,
-        visit_date=datetime.datetime.utcnow(),
-        status="draft",
-        chief_complaint=payload.chief_complaint,
-        chief_complaint_duration=payload.chief_complaint_duration,
-        present_illness_history=payload.present_illness_history or f"Patient self-reported complaint online: {payload.chief_complaint}",
-        raw_notes=f"Online Patient Intake Data: Past Diseases: {payload.past_diseases or 'None'}; Current Meds: {payload.current_medications or 'None'}"
-    )
-    db.add(new_case)
-    db.flush()
-    
-    # Add medical history if supplied
-    if payload.past_diseases or payload.current_medications or payload.known_allergies:
-        med_hist = MedicalHistory(
-            case_id=new_case.id,
-            past_diseases=payload.past_diseases,
-            current_medications=payload.current_medications,
-            drug_allergies=payload.known_allergies
+        # 3. Compute token number
+        existing_tokens = db.query(Appointment).filter(
+            Appointment.doctor_id == payload.doctor_id,
+            Appointment.appointment_date == payload.appointment_date
+        ).count()
+        token_num = existing_tokens + 1
+        
+        # 4. Create appointment
+        appt = Appointment(
+            patient_id=patient.id,
+            doctor_id=doctor.id,
+            department_id=dept_id,
+            appointment_date=payload.appointment_date,
+            time_slot=payload.time_slot,
+            token_number=token_num,
+            reason_for_visit=f"Online Self-Booking: {payload.chief_complaint}",
+            status="checked_in" # Instantly checked-in so it appears in Doctor's live active queue
         )
-        db.add(med_hist)
+        db.add(appt)
+        db.flush()
         
-    db.commit()
-    db.refresh(patient)
-    db.refresh(appt)
-    db.refresh(new_case)
+        # 5. Pre-create a draft clinical case sheet with the patient's submitted data
+        case_num = generate_next_case_number(db)
+        new_case = PatientCase(
+            case_number=case_num,
+            patient_id=patient.id,
+            doctor_id=doctor.id,
+            department_id=dept_id,
+            visit_date=datetime.datetime.utcnow(),
+            status="draft",
+            chief_complaint=payload.chief_complaint,
+            chief_complaint_duration=payload.chief_complaint_duration,
+            present_illness_history=payload.present_illness_history or f"Patient self-reported complaint online: {payload.chief_complaint}",
+            raw_notes=f"Online Patient Intake Data: Past Diseases: {payload.past_diseases or 'None'}; Current Meds: {payload.current_medications or 'None'}"
+        )
+        db.add(new_case)
+        db.flush()
+        
+        # Add medical history if supplied
+        if payload.past_diseases or payload.current_medications or payload.known_allergies:
+            med_hist = MedicalHistory(
+                case_id=new_case.id,
+                past_diseases=payload.past_diseases,
+                current_medications=payload.current_medications,
+                drug_allergies=payload.known_allergies
+            )
+            db.add(med_hist)
+            
+        db.commit()
+        db.refresh(patient)
+        db.refresh(appt)
+        db.refresh(new_case)
+    except HTTPException:
+        db.rollback()
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to book appointment: {str(e)}")
     
     # Log Audit
     log_audit_event(

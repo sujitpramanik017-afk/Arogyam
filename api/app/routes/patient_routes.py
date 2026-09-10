@@ -14,6 +14,7 @@ router = APIRouter(prefix="/patients", tags=["Patients"])
 def generate_next_patient_id(db: Session) -> str:
     current_year = datetime.datetime.now().year
     prefix = f"SAN-{current_year}-"
+    seq = 1
     # Find highest sequence
     last_patient = db.query(Patient).filter(Patient.patient_id.like(f"{prefix}%")).order_by(desc(Patient.id)).first()
     if last_patient:
@@ -100,9 +101,9 @@ def create_patient(
         phone=patient_in.phone.strip(),
         email=patient_in.email.strip() if patient_in.email else None,
         address=patient_in.address.strip(),
-        city=patient_in.city or "Durgapur",
+        city=patient_in.city or "Kolkata",
         state=patient_in.state or "West Bengal",
-        pincode=patient_in.pincode or "713212",
+        pincode=patient_in.pincode or "700091",
         emergency_contact_name=patient_in.emergency_contact_name,
         emergency_contact_phone=patient_in.emergency_contact_phone,
         emergency_relation=patient_in.emergency_relation,
@@ -110,9 +111,13 @@ def create_patient(
         occupation=patient_in.occupation,
         known_allergies=patient_in.known_allergies
     )
-    db.add(patient)
-    db.commit()
-    db.refresh(patient)
+    try:
+        db.add(patient)
+        db.commit()
+        db.refresh(patient)
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Database error registering patient: {str(e)}")
     
     log_audit_event(
         db=db,

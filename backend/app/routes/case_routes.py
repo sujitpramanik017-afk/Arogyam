@@ -14,6 +14,7 @@ router = APIRouter(prefix="/cases", tags=["Patient Cases"])
 def generate_next_case_number(db: Session) -> str:
     current_year = datetime.datetime.now().year
     prefix = f"CAS-{current_year}-"
+    seq = 1
     last_case = db.query(PatientCase).filter(PatientCase.case_number.like(f"{prefix}%")).order_by(desc(PatientCase.id)).first()
     if last_case:
         try:

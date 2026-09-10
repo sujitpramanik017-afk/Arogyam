@@ -73,19 +73,25 @@ def create_appointment(
     ).count()
     token_num = existing_tokens + 1
     
+    dept_id = appt_in.department_id or (doctor.department_id if doctor else 1) or 1
+    
     appt = Appointment(
         patient_id=appt_in.patient_id,
         doctor_id=appt_in.doctor_id,
-        department_id=appt_in.department_id or doctor.department_id,
+        department_id=dept_id,
         appointment_date=appt_in.appointment_date,
         time_slot=appt_in.time_slot,
         token_number=token_num,
         reason_for_visit=appt_in.reason_for_visit,
         status="scheduled"
     )
-    db.add(appt)
-    db.commit()
-    db.refresh(appt)
+    try:
+        db.add(appt)
+        db.commit()
+        db.refresh(appt)
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Database error creating appointment: {str(e)}")
     
     log_audit_event(
         db=db,
