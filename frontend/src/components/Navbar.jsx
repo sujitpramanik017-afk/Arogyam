@@ -32,16 +32,16 @@ export const Navbar = () => {
         {/* Hospital Branding */}
         <div className="flex items-center gap-3">
           <img
-            src="/assets/sanaka_logo.png"
-            alt="Sanaka Hospital"
-            className="h-10 w-auto object-contain"
+            src="/assets/arogyam_logo.png"
+            alt="Arogyam Hospital"
+            className="h-10 w-auto object-contain rounded"
           />
           <div className="hidden sm:block border-l border-slate-200 pl-3">
             <h1 className="text-sm font-bold text-slate-900 leading-tight tracking-tight">
-              SANAKA HOSPITALS
+              AROGYAM HOSPITALS
             </h1>
             <p className="text-[11px] text-slate-500 font-medium leading-none">
-              Shri Ramkrishna Institute of Medical Sciences · Durgapur
+              Salt Lake City, Kolkata, West Bengal, India
             </p>
           </div>
         </div>

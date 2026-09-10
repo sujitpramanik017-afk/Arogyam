@@ -43,7 +43,7 @@ export const PatientSelfPortal = () => {
     phone: '',
     email: '',
     address: '',
-    city: 'Durgapur',
+    city: 'Kolkata',
     emergency_contact_name: '',
     emergency_contact_phone: '',
     blood_group: 'B+',
@@ -105,17 +105,24 @@ export const PatientSelfPortal = () => {
 
   const handleSubmitBooking = async (e) => {
     e.preventDefault();
-    if (!formData.full_name || !formData.phone || !formData.dob || !formData.chief_complaint || !formData.doctor_id) {
+    const docId = parseInt(formData.doctor_id);
+    if (!formData.full_name || !formData.phone || !formData.dob || !formData.chief_complaint || !docId) {
       showError('Please complete all required fields (Name, Phone, DOB, Symptoms, Doctor)');
       return;
     }
 
     setSubmitting(true);
     try {
-      const res = await api.patientSelfBook(formData);
+      const payload = {
+        ...formData,
+        doctor_id: docId,
+        department_id: formData.department_id ? parseInt(formData.department_id) : undefined,
+      };
+      const res = await api.patientSelfBook(payload);
       setConfirmedBooking(res);
       showSuccess('OPD Appointment Confirmed! Your intake data is submitted to the Doctor.');
     } catch (err) {
+      console.error('Booking submission error:', err);
       showError(err.message || 'Failed to book appointment');
     } finally {
       setSubmitting(false);
@@ -148,12 +155,12 @@ export const PatientSelfPortal = () => {
       <div className="max-w-5xl mx-auto w-full flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
         <div className="flex items-center gap-3">
           <img
-            src="/assets/sanaka_logo.png"
-            alt="Sanaka Hospital"
-            className="h-12 w-auto bg-white p-1 rounded-md"
+            src="/assets/arogyam_logo.png"
+            alt="Arogyam Hospital"
+            className="h-12 w-auto rounded-md"
           />
           <div>
-            <h1 className="text-lg font-bold text-white tracking-tight">SANAKA HOSPITALS</h1>
+            <h1 className="text-lg font-bold text-white tracking-tight">AROGYAM HOSPITALS</h1>
             <p className="text-[11px] text-blue-400 font-medium">
               Patient Self-Service Portal · Online OPD Intake & Token Booking
             </p>
@@ -352,7 +359,7 @@ export const PatientSelfPortal = () => {
                     name="address"
                     value={formData.address}
                     onChange={handleChange}
-                    placeholder="Residential address / locality, Durgapur"
+                    placeholder="Residential address / locality, Salt Lake City, Kolkata"
                     className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -656,7 +663,7 @@ export const PatientSelfPortal = () => {
 
   {/* Footer */}
   <div className="max-w-7xl mx-auto w-full text-center text-[11px] text-slate-500 pt-6 border-t border-slate-800 mt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-    <span>Sanaka Hospital (SRIMS) · Malandighi, Durgapur, West Bengal - 713212</span>
+    <span>Arogyam Hospital · Salt Lake City, Kolkata, West Bengal, India</span>
     <span>Helpline: <strong className="text-slate-300">+91-9083284529</strong> · 24x7 Emergency Services</span>
   </div>
 

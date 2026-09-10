@@ -44,16 +44,16 @@ def resolve_database_url() -> str:
 
 
 class Settings:
-    PROJECT_NAME = "Sanaka Hospital Patient Case-Taking System"
+    PROJECT_NAME = "Arogyam Hospital Patient Case-Taking System"
     PROJECT_VERSION = "1.0.0"
     API_V1_STR = "/api"
     
-    HOSPITAL_NAME = "Sanaka Hospital"
-    HOSPITAL_UNIT = "Shri Ramkrishna Institute of Medical Sciences"
-    HOSPITAL_TRUST = "A Unit of Sanaka Educational Trust"
-    HOSPITAL_LOCATION = "Malandighi, Durgapur, West Bengal - 713212"
-    HOSPITAL_PHONE = "+91 343 252 2222 / 252 2223"
-    HOSPITAL_EMAIL = "info@sanakahospital.com"
+    HOSPITAL_NAME = "Arogyam Hospital"
+    HOSPITAL_UNIT = "Arogyam Institute of Medical Sciences"
+    HOSPITAL_TRUST = "Arogyam Healthcare Trust"
+    HOSPITAL_LOCATION = "Salt Lake City, Kolkata, West Bengal, India"
+    HOSPITAL_PHONE = "+91 33 2321 0000 / 0001"
+    HOSPITAL_EMAIL = "info@arogyamhospital.com"
     
     SECRET_KEY = os.getenv("SECRET_KEY", "sanaka_medical_jwt_secret_key_sih2026_case_taking_secure_98374921")
     ALGORITHM = "HS256"

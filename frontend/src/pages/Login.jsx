@@ -39,7 +39,7 @@ export const Login = () => {
       <div className="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-12 bg-slate-950 overflow-hidden border-r border-slate-800">
         <img
           src="/assets/sanaka_campus.jpg"
-          alt="Sanaka Hospital Campus"
+          alt="Arogyam Hospital Campus"
           className="absolute inset-0 w-full h-full object-cover opacity-25 filter brightness-90"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent"></div>
@@ -47,13 +47,13 @@ export const Login = () => {
         {/* Top Header */}
         <div className="relative z-10 flex items-center gap-3">
           <img
-            src="/assets/sanaka_logo.png"
-            alt="Sanaka Hospital"
-            className="h-14 w-auto bg-white p-1.5 rounded-lg shadow-sm"
+            src="/assets/arogyam_logo.png"
+            alt="Arogyam Hospital"
+            className="h-14 w-auto rounded-lg shadow-sm"
           />
           <div>
-            <div className="text-xl font-bold tracking-tight text-white">SANAKA HOSPITALS</div>
-            <div className="text-xs text-blue-300 font-medium">Shri Ramkrishna Institute of Medical Sciences</div>
+            <div className="text-xl font-bold tracking-tight text-white">AROGYAM HOSPITALS</div>
+            <div className="text-xs text-blue-300 font-medium">Salt Lake City, Kolkata, West Bengal, India</div>
           </div>
         </div>
 
@@ -91,8 +91,8 @@ export const Login = () => {
 
         {/* Footer Info */}
         <div className="relative z-10 text-xs text-slate-400 border-t border-slate-800/80 pt-4 flex justify-between items-center">
-          <span>A Unit of Sanaka Educational Trust</span>
-          <span>Malandighi, Durgapur, WB</span>
+          <span>Arogyam Hospital</span>
+          <span>Salt Lake City, Kolkata, West Bengal, India</span>
         </div>
       </div>
 
@@ -184,7 +184,7 @@ export const Login = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@sanakahospital.com"
+                  placeholder="name@arogyamhospital.com"
                   className="w-full pl-9 pr-3 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                 />
               </div>
@@ -224,7 +224,7 @@ export const Login = () => {
           </form>
 
           <div className="text-center text-[11px] text-slate-500 pt-2">
-            Sanaka Hospital EMR Portal · Authorized Personnel Only · 2026
+            Arogyam Hospital EMR Portal · Authorized Personnel Only · 2026
           </div>
         </div>
       </div>

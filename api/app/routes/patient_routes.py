@@ -22,8 +22,8 @@ def generate_next_patient_id(db: Session) -> str:
             seq = int(seq_str) + 1
         except Exception:
             seq = db.query(Patient).count() + 1
-    else:
-        seq = 1
+    while db.query(Patient).filter(Patient.patient_id == f"{prefix}{seq:05d}").first():
+        seq += 1
     return f"{prefix}{seq:05d}"
 
 @router.get("/next-id")

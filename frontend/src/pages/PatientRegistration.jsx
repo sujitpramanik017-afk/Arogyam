@@ -29,9 +29,9 @@ export const PatientRegistration = () => {
     phone: '',
     email: '',
     address: '',
-    city: 'Durgapur',
+    city: 'Kolkata',
     state: 'West Bengal',
-    pincode: '713212',
+    pincode: '700091',
     emergency_contact_name: '',
     emergency_contact_phone: '',
     emergency_relation: 'Family',
@@ -85,7 +85,7 @@ export const PatientRegistration = () => {
           </button>
           <h1 className="text-xl font-bold text-slate-900">New Patient Registration</h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Sanaka Hospital Master Patient Index (MPI) Entry Form
+            Arogyam Hospital Master Patient Index (MPI) Entry Form
           </p>
         </div>
 
@@ -250,7 +250,7 @@ export const PatientRegistration = () => {
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
-                placeholder="House/Street, Landmark, Malandighi/Durgapur"
+                placeholder="House/Street, Landmark, Salt Lake City/Kolkata"
                 className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
               />
             </div>

@@ -56,7 +56,7 @@ export const AppointmentQueue = () => {
     dob: '1990-01-01',
     gender: 'Male',
     phone: '',
-    address: 'Durgapur, West Bengal',
+    address: 'Salt Lake City, Kolkata',
     blood_group: 'B+',
     known_allergies: 'None',
   });

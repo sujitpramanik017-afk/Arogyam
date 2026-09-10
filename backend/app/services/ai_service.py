@@ -204,9 +204,9 @@ class AIClinicalService:
 
         if is_emergency:
             if is_bengali:
-                reply = "🚨 এটি একটি জরুরি পরিস্থিতি হতে পারে! অনুগ্রহ করে অবিলম্বে সনকা হাসপাতালের ২৪x৭ এমার্জেন্সি ও ট্রমা বিভাগে (+91-9083284529) যোগাযোগ করুন বা নিকটস্থ জরুরি চিকিৎসা কেন্দ্রে যান।"
+                reply = "🚨 এটি একটি জরুরি পরিস্থিতি হতে পারে! অনুগ্রহ করে অবিলম্বে আরোগ্যম হাসপাতালের ২৪x৭ এমার্জেন্সি ও ট্রমা বিভাগে (+91-9083284529) যোগাযোগ করুন বা নিকটস্থ জরুরি চিকিৎসা কেন্দ্রে যান।"
             else:
-                reply = "🚨 If you believe this is a medical emergency, please seek immediate medical attention or contact the Sanaka Hospital 24x7 Emergency Department directly at +91-9083284529."
+                reply = "🚨 If you believe this is a medical emergency, please seek immediate medical attention or contact the Arogyam Hospital 24x7 Emergency Department directly at +91-9083284529."
             return {
                 "reply": reply,
                 "language": lang,
@@ -217,7 +217,7 @@ class AIClinicalService:
 
         if is_asking_medical:
             if is_bengali:
-                reply = "আমি আরোগ্য, সনকা হাসপাতালের তথ্য সহকারী। আমি হাসপাতাল ও ওপিডি সম্পর্কিত তথ্য দিয়ে সাহায্য করতে পারি, কিন্তু কোনো রোগ নির্ণয় বা ওষুধের পরামর্শ দিতে পারি না। অনুগ্রহ করে সঠিক চিকিৎসা ও পরামর্শের জন্য আমাদের হাসপাতালে একজন যোগ্য ডাক্তারের সাথে পরামর্শ করুন। জরুরি প্রয়োজনে কল করুন: +91-9083284529।"
+                reply = "আমি আরোগ্য, আরোগ্যম হাসপাতালের তথ্য সহকারী। আমি হাসপাতাল ও ওপিডি সম্পর্কিত তথ্য দিয়ে সাহায্য করতে পারি, কিন্তু কোনো রোগ নির্ণয় বা ওষুধের পরামর্শ দিতে পারি না। অনুগ্রহ করে সঠিক চিকিৎসা ও পরামর্শের জন্য আমাদের হাসপাতালে একজন যোগ্য ডাক্তারের সাথে পরামর্শ করুন। জরুরি প্রয়োজনে কল করুন: +91-9083284529।"
             else:
                 reply = "I’m Arogya, the hospital information assistant. I can help with hospital-related information, but I cannot diagnose conditions or recommend medicines. Please consult a qualified doctor. If you believe this is a medical emergency, please seek immediate medical attention or contact the hospital emergency department."
             return {
@@ -232,9 +232,9 @@ class AIClinicalService:
         # Contact / Phone
         if any(k in text_lower for k in ["contact", "phone", "number", "call", "helpline", "mobile", "address", "location", "where", "reach", "email"]) or any(k in text for k in ["ফোন", "নম্বর", "যোগাযোগ", "কল", "হেল্পলাইন", "ঠিকানা", "কোথায়"]):
             if is_bengali:
-                reply = "📞 আপনি সনকা হাসপাতালে যোগাযোগ করতে পারেন:\n• হেল্পলাইন নম্বর: +91-9083284529\n• ঠিকানা: শ্রী রামকৃষ্ণ ইনস্টিটিউট অফ মেডিকেল সায়েন্সেস, মালানদিঘি, দুর্গাপুর, পশ্চিমবঙ্গ - ৭১৩২১২\n• জরুরি পরিষেবা: ২৪ ঘণ্টা খোলা।"
+                reply = "📞 আপনি আরোগ্যম হাসপাতালে যোগাযোগ করতে পারেন:\n• হেল্পলাইন নম্বর: +91-9083284529\n• ঠিকানা: সল্টলেক সিটি, কলকাতা, পশ্চিমবঙ্গ, ভারত\n• জরুরি পরিষেবা: ২৪ ঘণ্টা খোলা।"
             else:
-                reply = "📞 You can contact Sanaka Hospital at +91-9083284529.\n• Location: Shri Ramkrishna Institute of Medical Sciences (A Unit of Sanaka Educational Trust), Malandighi, Durgapur, West Bengal - 713212.\n• Emergency Helpline: Open 24x7."
+                reply = "📞 You can contact Arogyam Hospital at +91-9083284529.\n• Location: Salt Lake City, Kolkata, West Bengal, India.\n• Emergency Helpline: Open 24x7."
             return {
                 "reply": reply,
                 "language": lang,
@@ -246,9 +246,9 @@ class AIClinicalService:
         # Timings / Hours
         if any(k in text_lower for k in ["time", "timing", "hours", "open", "close", "schedule", "sunday", "opd time"]) or any(k in text for k in ["সময়", "সময়সূচী", "কখন", "খোলা", "বন্ধ", "রবিবার", "ওপিডি"]):
             if is_bengali:
-                reply = "🏥 সনকা হাসপাতালের ওপিডি (OPD) সময়সূচী:\n• বহির্বিভাগ (OPD): সোমবার থেকে শনিবার সকাল ৮:০০ টা থেকে বিকেল ৫:০০ টা (সকালের স্লট: ৮:০০ - ১:০০, দুপুরের স্লট: ২:০০ - ৫:০০)।\n• জরুরি ও ট্রমা বিভাগ (Casualty): ২৪ ঘণ্টা, সপ্তাহের ৭ দিনই (২৪x৭) নিরবচ্ছিন্নভাবে খোলা থাকে।"
+                reply = "🏥 আরোগ্যম হাসপাতালের ওপিডি (OPD) সময়সূচী:\n• বহির্বিভাগ (OPD): সোমবার থেকে শনিবার সকাল ৮:০০ টা থেকে বিকেল ৫:০০ টা (সকালের স্লট: ৮:০০ - ১:০০, দুপুরের স্লট: ২:০০ - ৫:০০)।\n• জরুরি ও ট্রমা বিভাগ (Casualty): ২৪ ঘণ্টা, সপ্তাহের ৭ দিনই (২৪x৭) নিরবচ্ছিন্নভাবে খোলা থাকে।"
             else:
-                reply = "🏥 Sanaka Hospital Outpatient Department (OPD) Timings:\n• OPD Hours: Monday to Saturday, 8:00 AM to 5:00 PM (Morning Slot: 8:00 AM - 1:00 PM, Afternoon Slot: 2:00 PM - 5:00 PM).\n• Emergency & Trauma Care Department: Open 24 hours a day, 7 days a week (24x7)."
+                reply = "🏥 Arogyam Hospital Outpatient Department (OPD) Timings:\n• OPD Hours: Monday to Saturday, 8:00 AM to 5:00 PM (Morning Slot: 8:00 AM - 1:00 PM, Afternoon Slot: 2:00 PM - 5:00 PM).\n• Emergency & Trauma Care Department: Open 24 hours a day, 7 days a week (24x7)."
             return {
                 "reply": reply,
                 "language": lang,
@@ -260,9 +260,9 @@ class AIClinicalService:
         # Doctors & Departments
         if any(k in text_lower for k in ["doctor", "department", "specialist", "physician", "ortho", "cardio", "pediatric", "surgery", "gynec", "ent", "dermat"]) or any(k in text for k in ["ডাক্তার", "ডাক্তারবাবু", "বিভাগ", "স্পেশালিস্ট", "মেডিসিন", "অর্থোপেডিক", "শিশু", "সার্জারি", "কার্ডিওলজি"]):
             if is_bengali:
-                reply = "👨‍⚕️ সনকা হাসপাতালের বিশেষজ্ঞ বিভাগ ও প্রধান চিকিৎসকগণ:\n• মেডিসিন বিভাগ: ডাঃ অনন্যা সেন\n• অর্থোপেডিকস ও ট্রমাটোলজি: ডাঃ শুভাশীষ চ্যাটার্জী\n• পেডিয়াট্রিকস ও শিশু স্বাস্থ্য: ডাঃ প্রিয়া ব্যানার্জী\n• জেনারেল ও ল্যাপারোস্কোপিক সার্জারি: ডাঃ কে. এন. মুখার্জী\n• স্ত্রীরোগ ও প্রসূতি (OBGYN): ডাঃ এস. মুখার্জী\n• কার্ডিওলজি (হৃদরোগ): ডাঃ এ. কে. দত্ত\n• চর্মরোগ (Dermatology): ডাঃ আর. সেনগুপ্ত\n• ইএনটি (ENT / নাক-কান-গলা): ডাঃ এম. রায়।"
+                reply = "👨‍⚕️ আরোগ্যম হাসপাতালের বিশেষজ্ঞ বিভাগ ও প্রধান চিকিৎসকগণ:\n• মেডিসিন বিভাগ: ডাঃ অনন্যা সেন\n• অর্থোপেডিকস ও ট্রমাটোলজি: ডাঃ শুভাশীষ চ্যাটার্জী\n• পেডিয়াট্রিকস ও শিশু স্বাস্থ্য: ডাঃ প্রিয়া ব্যানার্জী\n• জেনারেল ও ল্যাপারোস্কোপিক সার্জারি: ডাঃ কে. এন. মুখার্জী\n• স্ত্রীরোগ ও প্রসূতি (OBGYN): ডাঃ এস. মুখার্জী\n• কার্ডিওলজি (হৃদরোগ): ডাঃ এ. কে. দত্ত\n• চর্মরোগ (Dermatology): ডাঃ আর. সেনগুপ্ত\n• ইএনটি (ENT / নাক-কান-গলা): ডাঃ এম. রায়।"
             else:
-                reply = "👨‍⚕️ Sanaka Hospital Specialized Clinical Departments & Doctors:\n• General Medicine: Dr. Ananya Sen\n• Orthopedics & Traumatology: Dr. Subhashish Chatterjee\n• Pediatrics & Child Health: Dr. Priya Banerjee\n• General & Laparoscopic Surgery: Dr. K. N. Mukherjee\n• Obstetrics & Gynecology: Dr. S. Mukherjee\n• Cardiology: Dr. A. K. Dutta\n• Dermatology & Venereology: Dr. R. Sengupta\n• ENT & Head-Neck Surgery: Dr. M. Roy."
+                reply = "👨‍⚕️ Arogyam Hospital Specialized Clinical Departments & Doctors:\n• General Medicine: Dr. Ananya Sen\n• Orthopedics & Traumatology: Dr. Subhashish Chatterjee\n• Pediatrics & Child Health: Dr. Priya Banerjee\n• General & Laparoscopic Surgery: Dr. K. N. Mukherjee\n• Obstetrics & Gynecology: Dr. S. Mukherjee\n• Cardiology: Dr. A. K. Dutta\n• Dermatology & Venereology: Dr. R. Sengupta\n• ENT & Head-Neck Surgery: Dr. M. Roy."
             return {
                 "reply": reply,
                 "language": lang,
@@ -276,7 +276,7 @@ class AIClinicalService:
             if is_bengali:
                 reply = "📅 ওপিডি অ্যাপয়েন্টমেন্ট বুকিং করার উপায়:\n১. অনলাইন সেলফ-পোর্টাল: আমাদের হোমপেজের 'Patient Self-Booking' অংশে আপনার নাম, মোবাইল নম্বর এবং কাঙ্ক্ষিত বিভাগ/ডাক্তার নির্বাচন করে তৎক্ষণাৎ টোকেন সংগ্রহ করুন।\n২. সরাসরি হাসপাতালে: গ্রাউন্ড ফ্লোরে ওপিডি রেজিস্ট্রেশন কাউন্টারে এসে সরাসরি টোকেন নিতে পারেন।\nসাহায্যের জন্য কল করুন: +91-9083284529।"
             else:
-                reply = "📅 How to Book an OPD Appointment at Sanaka Hospital:\n1. Online Self-Booking Portal: You can book an OPD appointment directly on our homepage. Select your department/doctor, enter your details, and receive an instant consultation token.\n2. In-Person at Hospital: Visit the OPD Reception Counter on the Ground Floor.\nFor booking assistance, call +91-9083284529."
+                reply = "📅 How to Book an OPD Appointment at Arogyam Hospital:\n1. Online Self-Booking Portal: You can book an OPD appointment directly on our homepage. Select your department/doctor, enter your details, and receive an instant consultation token.\n2. In-Person at Hospital: Visit the OPD Reception Counter on the Ground Floor.\nFor booking assistance, call +91-9083284529."
             return {
                 "reply": reply,
                 "language": lang,
@@ -288,7 +288,7 @@ class AIClinicalService:
         # Registration Process / UHID
         if any(k in text_lower for k in ["register", "registration", "uhid", "patient id", "new patient", "first time", "card"]) or any(k in text for k in ["রেজিস্ট্রেশন", "রেজিস্টার", "আইডি", "নতুন রোগী", "কার্ড"]):
             if is_bengali:
-                reply = "🧾 রোগী রেজিস্ট্রেশন প্রক্রিয়া:\n• সনকা হাসপাতালে প্রত্যেক রোগীকে একটি স্থায়ী ইউনিক পেশেন্ট আইডি (UHID - যেমন SAN-2026-XXXXX) দেওয়া হয়।\n• অনলাইন সেলফ-বুকিং পোর্টালে ফর্ম জমা দিলে আপনার আইডি স্বয়ংক্রিয়ভাবে তৈরি হয়।\n• হাসপাতালে আসার সময় অনুগ্রহ করে একটি বৈধ সরকারি পরিচয়পত্র (আধার/ভোটার কার্ড) ও ফোন নম্বর সঙ্গে রাখুন।"
+                reply = "🧾 রোগী রেজিস্ট্রেশন প্রক্রিয়া:\n• আরোগ্যম হাসপাতালে প্রত্যেক রোগীকে একটি স্থায়ী ইউনিক পেশেন্ট আইডি (UHID - যেমন SAN-2026-XXXXX) দেওয়া হয়।\n• অনলাইন সেলফ-বুকিং পোর্টালে ফর্ম জমা দিলে আপনার আইডি স্বয়ংক্রিয়ভাবে তৈরি হয়।\n• হাসপাতালে আসার সময় অনুগ্রহ করে একটি বৈধ সরকারি পরিচয়পত্র (আধার/ভোটার কার্ড) ও ফোন নম্বর সঙ্গে রাখুন।"
             else:
                 reply = "🧾 Patient Registration Process:\n• Every patient is issued a permanent Unique Hospital ID (UHID, e.g., SAN-2026-XXXXX) in the Master Patient Index.\n• You can register online instantly when booking an appointment on this portal, or at the Hospital Reception Desk.\n• Please bring a valid Government Photo ID (Aadhaar/Voter ID) and active phone number."
             return {
@@ -302,7 +302,7 @@ class AIClinicalService:
         # Emergency Services
         if any(k in text_lower for k in ["emergency", "casualty", "ambulance", "trauma", "urgent", "critical care", "icu", "nicu", "picu"]) or any(k in text for k in ["জরুরি", "এমার্জেন্সি", "অ্যাম্বুলেন্স", "ট্রমা", "আইসিইউ"]):
             if is_bengali:
-                reply = "🚑 জরুরি ও ট্রমা পরিষেবা (২৪x৭):\n• সনকা হাসপাতালে ২৪ ঘণ্টা জরুরি বিভাগ, ট্রমা সেন্টার ও ক্রিটিক্যাল কেয়ার ইউনিট (ICU, ICCU, NICU, PICU) চালু রয়েছে।\n• ২৪ ঘণ্টার ডায়াগনস্টিক ল্যাব, ব্লাড ব্যাঙ্ক এবং অ্যাম্বুলেন্স পরিষেবা উপলব্ধ।\n• জরুরি হেল্পলাইন: +91-9083284529।"
+                reply = "🚑 জরুরি ও ট্রমা পরিষেবা (২৪x৭):\n• আরোগ্যম হাসপাতালে ২৪ ঘণ্টা জরুরি বিভাগ, ট্রমা সেন্টার ও ক্রিটিক্যাল কেয়ার ইউনিট (ICU, ICCU, NICU, PICU) চালু রয়েছে।\n• ২৪ ঘণ্টার ডায়াগনস্টিক ল্যাব, ব্লাড ব্যাঙ্ক এবং অ্যাম্বুলেন্স পরিষেবা উপলব্ধ।\n• জরুরি হেল্পলাইন: +91-9083284529।"
             else:
                 reply = "🚑 Emergency & Trauma Services (24x7):\n• Dedicated 24x7 Emergency Resuscitation & Trauma Wing with advanced ICU, ICCU, NICU, and PICU.\n• Round-the-clock Pathology, CT Scan, X-Ray, Blood Storage, and Ambulance dispatch.\n• 24x7 Emergency Contact: +91-9083284529."
             return {
@@ -332,7 +332,7 @@ class AIClinicalService:
             if is_bengali:
                 reply = "💊 প্রেসক্রিপশন ও ফার্মেসি সংক্রান্ত তথ্য:\n• ওপিডি পরামর্শের পর ডাক্তারবাবু ডিজিটাল প্রেসক্রিপশন প্রদান করেন।\n• আপনি এই পোর্টালে 'Lookup Records' অপশনে আপনার ফোন নম্বর দিয়ে প্রেসক্রিপশন দেখতে ও ডাউনলোড করতে পারেন।\n• হাসপাতালের নিজস্ব ২৪ ঘণ্টা ফার্মেসি থেকে সমস্ত প্রেসক্রাইবড ওষুধ পাওয়া যায়।"
             else:
-                reply = "💊 Prescription & Pharmacy Information:\n• Electronic digital prescriptions are issued by the doctor following consultation.\n• You can view and download past prescriptions on this portal under 'My Records' using your registered mobile number.\n• Genuine prescribed medicines are available 24x7 at the Sanaka Hospital In-House Pharmacy."
+                reply = "💊 Prescription & Pharmacy Information:\n• Electronic digital prescriptions are issued by the doctor following consultation.\n• You can view and download past prescriptions on this portal under 'My Records' using your registered mobile number.\n• Genuine prescribed medicines are available 24x7 at the Arogyam Hospital In-House Pharmacy."
             return {
                 "reply": reply,
                 "language": lang,
@@ -344,9 +344,9 @@ class AIClinicalService:
         # Hospital Facilities
         if any(k in text_lower for k in ["facility", "facilities", "beds", "ot", "operation", "canteen", "wheelchair", "parking", "ward", "dialysis"]) or any(k in text for k in ["সুবিধা", "সুবিধাসমূহ", "বেড", "অপারেশন", "ক্যান্টিন", "হুইলচেয়ার", "ডায়ালাইসিস"]):
             if is_bengali:
-                reply = "🏨 সনকা হাসপাতালের প্রধান সুবিধাসমূহ:\n• ৫০০+ শয্যাবিশিষ্ট জেনারেল ও প্রাইভেট কেবিন ওয়ার্ড।\n• অত্যাধুনিক মডুলার অপারেশন থিয়েটার (OT) ও ডায়ালাইসিস ইউনিট।\n• ২৪ ঘণ্টা ফার্মেসি, ব্লাড ব্যাঙ্ক ও ক্যাফেটেরিয়া।\n• রোগী ও বয়স্কদের জন্য বিনামূল্যে হুইলচেয়ার ও স্ট্রেচার সহায়তা এবং পর্যাপ্ত পার্কিং ব্যবস্থা।"
+                reply = "🏨 আরোগ্যম হাসপাতালের প্রধান সুবিধাসমূহ:\n• ৫০০+ শয্যাবিশিষ্ট জেনারেল ও প্রাইভেট কেবিন ওয়ার্ড।\n• অত্যাধুনিক মডুলার অপারেশন থিয়েটার (OT) ও ডায়ালাইসিস ইউনিট।\n• ২৪ ঘণ্টা ফার্মেসি, ব্লাড ব্যাঙ্ক ও ক্যাফেটেরিয়া।\n• রোগী ও বয়স্কদের জন্য বিনামূল্যে হুইলচেয়ার ও স্ট্রেচার সহায়তা এবং পর্যাপ্ত পার্কিং ব্যবস্থা।"
             else:
-                reply = "🏨 Sanaka Hospital Facilities:\n• 500+ In-patient beds with General, Semi-private & Deluxe Cabins.\n• Modern Modular Operation Theatres & Dedicated Dialysis Unit.\n• 24x7 Pharmacy, Blood Storage Unit, and Hygenic Food Court/Canteen.\n• Free Wheelchair, Stretcher assistance, and spacious on-campus parking."
+                reply = "🏨 Arogyam Hospital Facilities:\n• 500+ In-patient beds with General, Semi-private & Deluxe Cabins.\n• Modern Modular Operation Theatres & Dedicated Dialysis Unit.\n• 24x7 Pharmacy, Blood Storage Unit, and Hygenic Food Court/Canteen.\n• Free Wheelchair, Stretcher assistance, and spacious on-campus parking."
             return {
                 "reply": reply,
                 "language": lang,
@@ -358,9 +358,9 @@ class AIClinicalService:
         # General Greetings
         if any(k in text_lower for k in ["hello", "hi", "hey", "namaste", "good morning", "good evening", "shubho", "arogya", "help", "who are you"]) or any(k in text for k in ["নমস্কার", "হ্যালো", "হাই", "কেমন আছেন", "সাহায্য"]):
             if is_bengali:
-                reply = "নমস্কার! আমি আরোগ্য, সনকা হাসপাতালের তথ্য সহকারী। সনকা হাসপাতালের ওপিডি সময়সূচী, ডাক্তারদের তালিকা, অ্যাপয়েন্টমেন্ট বুকিং বা হাসপাতালের সুবিধা সংক্রান্ত যেকোনো তথ্যের জন্য আমাকে জিজ্ঞাসা করতে পারেন।"
+                reply = "নমস্কার! আমি আরোগ্য, আরোগ্যম হাসপাতালের তথ্য সহকারী। আরোগ্যম হাসপাতালের ওপিডি সময়সূচী, ডাক্তারদের তালিকা, অ্যাপয়েন্টমেন্ট বুকিং বা হাসপাতালের সুবিধা সংক্রান্ত যেকোনো তথ্যের জন্য আমাকে জিজ্ঞাসা করতে পারেন।"
             else:
-                reply = "Hello! I’m Arogya, the Sanaka Hospital Information Assistant. How can I help you with our OPD schedule, doctors, appointment booking, or hospital facilities today?"
+                reply = "Hello! I’m Arogya, the Arogyam Hospital Information Assistant. How can I help you with our OPD schedule, doctors, appointment booking, or hospital facilities today?"
             return {
                 "reply": reply,
                 "language": lang,
@@ -371,9 +371,9 @@ class AIClinicalService:
 
         # 3. Fallback for unverified / unknown questions
         if is_bengali:
-            reply = "দুঃখিত, এই বিষয়ে আমার কাছে যাচাইকৃত তথ্য নেই। অনুগ্রহ করে বিস্তারিত জানতে সনকা হাসপাতালের হেল্পলাইনে যোগাযোগ করুন: +91-9083284529।"
+            reply = "দুঃখিত, এই বিষয়ে আমার কাছে যাচাইকৃত তথ্য নেই। অনুগ্রহ করে বিস্তারিত জানতে আরোগ্যম হাসপাতালের হেল্পলাইনে যোগাযোগ করুন: +91-9083284529।"
         else:
-            reply = "Sorry, I don't have verified information about that. Please contact Sanaka Hospital at +91-9083284529."
+            reply = "Sorry, I don't have verified information about that. Please contact Arogyam Hospital at +91-9083284529."
 
         return {
             "reply": reply,

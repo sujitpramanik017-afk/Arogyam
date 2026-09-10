@@ -395,7 +395,7 @@ export const DoctorsList = () => {
                     required
                     value={addForm.email}
                     onChange={(e) => setAddForm({ ...addForm, email: e.target.value })}
-                    placeholder="dr.suman@sanakahospital.com"
+                    placeholder="dr.suman@arogyamhospital.com"
                     className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500"
                   />
                 </div>

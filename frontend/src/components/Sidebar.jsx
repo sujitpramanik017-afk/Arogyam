@@ -139,12 +139,12 @@ export const Sidebar = () => {
 
       {/* Hospital System Footer Info */}
       <div className="p-3.5 m-3 rounded-lg bg-slate-800/60 border border-slate-800 text-[11px] text-slate-400 space-y-1">
-        <div className="font-semibold text-slate-200">Sanaka EMR System</div>
+        <div className="font-semibold text-slate-200">Arogyam EMR System</div>
         <div className="text-[10px] text-slate-400 leading-tight">
           Emergency OPD: 24x7 Active
         </div>
         <div className="text-[10px] text-slate-500 pt-1 border-t border-slate-700/50">
-          Malandighi, Durgapur
+          Salt Lake City, Kolkata
         </div>
       </div>
     </aside>

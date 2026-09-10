@@ -27,9 +27,17 @@ async function request(endpoint, options = {}) {
     let errorMsg = 'An error occurred';
     try {
       const errJson = await response.json();
-      errorMsg = errJson.detail || JSON.stringify(errJson);
+      if (typeof errJson.detail === 'string') {
+        errorMsg = errJson.detail;
+      } else if (Array.isArray(errJson.detail)) {
+        errorMsg = errJson.detail.map((d) => d.msg || JSON.stringify(d)).join(', ');
+      } else if (errJson.message) {
+        errorMsg = errJson.message;
+      } else {
+        errorMsg = JSON.stringify(errJson);
+      }
     } catch {
-      errorMsg = response.statusText;
+      errorMsg = response.statusText || 'Server response error';
     }
     throw new Error(errorMsg);
   }

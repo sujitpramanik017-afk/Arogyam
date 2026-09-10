@@ -53,7 +53,7 @@ export const DepartmentsList = () => {
         <div>
           <h1 className="text-xl font-bold text-slate-900">Hospital Clinical Departments</h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Sanaka Hospital / Shri Ramkrishna Institute of Medical Sciences
+            Arogyam Hospital · Salt Lake City, Kolkata, West Bengal, India
           </p>
         </div>
 

@@ -73,7 +73,7 @@ export const PrescriptionView = () => {
             </span>
             <div className="font-bold text-sm text-slate-900">Dr. {rx.doctor_name}</div>
             <div className="text-slate-600 text-[11px]">Department of {rx.department_name}</div>
-            <div className="text-slate-500 text-[10px] mt-0.5">Sanaka Hospital OPD Consultation</div>
+            <div className="text-slate-500 text-[10px] mt-0.5">Arogyam Hospital OPD Consultation</div>
           </div>
 
           <div className="text-right">
@@ -170,7 +170,7 @@ export const PrescriptionView = () => {
         <div className="mt-12 pt-6 border-t border-slate-300 flex items-end justify-between text-xs">
           <div className="text-[11px] text-slate-500 max-w-sm">
             <p className="font-semibold text-slate-700">Notice to Patient:</p>
-            <p>Please bring this prescription during your follow-up visit. In case of acute drug reactions or emergency, report to Sanaka Hospital 24x7 Casualty immediately.</p>
+            <p>Please bring this prescription during your follow-up visit. In case of acute drug reactions or emergency, report to Arogyam Hospital 24x7 Casualty immediately.</p>
           </div>
 
           <div className="text-center">

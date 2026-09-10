@@ -22,22 +22,22 @@ try:
         db_dir = os.path.dirname(db_path)
         if db_dir and not os.path.exists(db_dir):
             os.makedirs(db_dir, exist_ok=True)
-        print("[Sanaka EMR] Running with local SQLite database")
+        print("[Arogyam EMR] Running with local SQLite database")
     else:
         # PostgreSQL / Supabase
         masked_url = settings.DATABASE_URL.split("@")[-1] if "@" in settings.DATABASE_URL else "PostgreSQL"
-        print(f"[Sanaka EMR] Connected to PostgreSQL host: {masked_url}")
+        print(f"[Arogyam EMR] Connected to PostgreSQL host: {masked_url}")
 
     Base.metadata.create_all(bind=engine)
     seed_database()
 except Exception as e:
-    print(f"[Sanaka EMR] Database initialization notice: {e}")
+    print(f"[Arogyam EMR] Database initialization notice: {e}")
 
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.PROJECT_VERSION,
-    description="Sanaka Hospital Patient Case-Taking & Medical Record System (SIH26047)"
+    description="Arogyam Hospital Patient Case-Taking & Medical Record System (SIH26047)"
 )
 
 # CORS
@@ -75,4 +75,4 @@ def root():
 
 @app.get("/api/health")
 def health():
-    return {"status": "healthy", "service": "Sanaka Hospital EMR API"}
+    return {"status": "healthy", "service": "Arogyam Hospital EMR API"}

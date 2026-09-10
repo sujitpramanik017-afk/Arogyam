@@ -300,7 +300,7 @@ export const CaseTaker = () => {
             <h1 className="text-xl font-bold text-slate-900">Digital Patient Case-Taking Studio</h1>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
-            Sanaka Hospital Electronic Health Record · Structured Clinical Documentation
+            Arogyam Hospital Electronic Health Record · Structured Clinical Documentation
           </p>
         </div>
 

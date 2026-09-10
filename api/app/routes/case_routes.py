@@ -21,8 +21,8 @@ def generate_next_case_number(db: Session) -> str:
             seq = int(seq_str) + 1
         except Exception:
             seq = db.query(PatientCase).count() + 1
-    else:
-        seq = 1
+    while db.query(PatientCase).filter(PatientCase.case_number == f"{prefix}{seq:05d}").first():
+        seq += 1
     return f"{prefix}{seq:05d}"
 
 def calculate_bmi(weight_kg: Optional[float], height_cm: Optional[float]) -> Optional[float]:

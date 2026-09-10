@@ -141,7 +141,7 @@ def book_appointment_self(payload: PatientSelfBookingRequest, db: Session = Depe
         action="ONLINE_PATIENT_BOOKING",
         entity_type="Appointment",
         entity_id=str(appt.id),
-        details=f"Patient {patient.full_name} ({patient.patient_id}) self-booked Token #{token_num} with Dr. {doctor.user.full_name}"
+        details=f"Patient {patient.full_name} ({patient.patient_id}) self-booked Token #{token_num} with {doctor.full_name}"
     )
     
     return {
@@ -150,7 +150,7 @@ def book_appointment_self(payload: PatientSelfBookingRequest, db: Session = Depe
         "patient_id": patient.patient_id,
         "patient_name": patient.full_name,
         "token_number": token_num,
-        "doctor_name": doctor.user.full_name,
+        "doctor_name": doctor.full_name,
         "department_name": doctor.department.name if doctor.department else "General",
         "appointment_date": appt.appointment_date,
         "time_slot": appt.time_slot,

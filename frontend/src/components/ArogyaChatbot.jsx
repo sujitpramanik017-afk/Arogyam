@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../services/api';
 import {
   Sparkles,
@@ -56,8 +56,8 @@ export const ArogyaChatbot = ({ isFloating = false, onClose, initialOpen = true 
     {
       id: 'welcome-1',
       sender: 'arogya',
-      text: 'Hello! I’m Arogya. How can I help you with Sanaka Hospital information?',
-      textBn: 'নমস্কার! আমি আরোগ্য। সনকা হাসপাতাল সম্পর্কিত তথ্যে আপনাকে কীভাবে সাহায্য করতে পারি?',
+      text: 'Hello! I’m Arogya. How can I help you with Arogyam Hospital information?',
+      textBn: 'নমস্কার! আমি আরোগ্য। আরোগ্যম হাসপাতাল সম্পর্কিত তথ্যে আপনাকে কীভাবে সাহায্য করতে পারি?',
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       isMedicalWarning: false,
     },
@@ -106,8 +106,8 @@ export const ArogyaChatbot = ({ isFloating = false, onClose, initialOpen = true 
         id: Date.now() + '-arogya-fallback',
         sender: 'arogya',
         text: isBengali
-          ? '📞 আপনি সরাসরি সনকা হাসপাতালে যোগাযোগ করতে পারেন: +91-9083284529।'
-          : '📞 You can contact Sanaka Hospital at +91-9083284529 (Malandighi, Durgapur, West Bengal - 713212).',
+          ? '📞 আপনি সরাসরি আরোগ্যম হাসপাতালে যোগাযোগ করতে পারেন: +91-9083284529।'
+          : '📞 You can contact Arogyam Hospital at +91-9083284529 (Salt Lake City, Kolkata, West Bengal, India).',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         isMedicalWarning: false,
         hospitalPhone: '+91-9083284529',
@@ -124,8 +124,8 @@ export const ArogyaChatbot = ({ isFloating = false, onClose, initialOpen = true 
         id: Date.now() + '-welcome',
         sender: 'arogya',
         text: language === 'bn'
-          ? 'নমস্কার! আমি আরোগ্য। সনকা হাসপাতাল সম্পর্কিত তথ্যে আপনাকে কীভাবে সাহায্য করতে পারি?'
-          : 'Hello! I’m Arogya. How can I help you with Sanaka Hospital information?',
+          ? 'নমস্কার! আমি আরোগ্য। আরোগ্যম হাসপাতাল সম্পর্কিত তথ্যে আপনাকে কীভাবে সাহায্য করতে পারি?'
+          : 'Hello! I’m Arogya. How can I help you with Arogyam Hospital information?',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         isMedicalWarning: false,
       },
@@ -170,7 +170,7 @@ export const ArogyaChatbot = ({ isFloating = false, onClose, initialOpen = true 
               </h3>
             </div>
             <p className="text-[11px] text-emerald-100 font-medium line-clamp-1">
-              Sanaka Hospital Information & OPD FAQ Assistant
+              Arogyam Hospital Information & OPD FAQ Assistant
             </p>
           </div>
         </div>

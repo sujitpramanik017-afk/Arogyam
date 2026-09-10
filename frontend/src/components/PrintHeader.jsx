@@ -5,22 +5,22 @@ export const PrintHeader = ({ title = "MEDICAL RECORD / CASE SUMMARY" }) => {
     <div className="border-b-2 border-slate-800 pb-3 mb-4 flex items-center justify-between">
       <div className="flex items-center gap-3">
         <img
-          src="/assets/sanaka_logo.png"
-          alt="Sanaka Hospital"
+          src="/assets/arogyam_logo_transparent.png"
+          alt="Arogyam Hospital"
           className="h-16 w-auto object-contain"
         />
         <div>
           <h1 className="text-xl font-black text-slate-900 tracking-tight">
-            SANAKA HOSPITALS
+            AROGYAM HOSPITALS
           </h1>
           <p className="text-xs font-semibold text-slate-700">
-            SHRI RAMKRISHNA INSTITUTE OF MEDICAL SCIENCES
+            ADVANCED HEALTHCARE & MULTISPECIALITY HOSPITAL
           </p>
           <p className="text-[10px] text-slate-500 font-medium">
-            A Unit of Sanaka Educational Trust · Malandighi, Durgapur, West Bengal - 713212
+            Salt Lake City, Kolkata, West Bengal, India
           </p>
           <p className="text-[10px] text-slate-500 font-medium">
-            Phone: +91 343 252 2222 / 2223 · Email: info@sanakahospital.com
+            Phone: +91 33 2321 0000 / 0001 · Email: info@arogyamhospital.com
           </p>
         </div>
       </div>

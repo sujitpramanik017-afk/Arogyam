@@ -48,7 +48,7 @@ export const AdminDashboard = () => {
             <h1 className="text-xl font-bold text-slate-900">Hospital Administration & Governance</h1>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Sanaka Hospital / Shri Ramkrishna Institute of Medical Sciences · Malandighi, Durgapur
+            Arogyam Hospital · Salt Lake City, Kolkata, West Bengal, India
           </p>
         </div>
 

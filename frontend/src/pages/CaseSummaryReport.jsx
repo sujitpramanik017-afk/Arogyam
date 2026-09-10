@@ -238,7 +238,7 @@ export const CaseSummaryReport = () => {
         {/* Signatures Footer */}
         <div className="mt-8 pt-6 border-t border-slate-300 flex items-end justify-between text-xs">
           <div className="text-[10px] text-slate-500 font-mono">
-            Document generated electronically by Sanaka Hospital EMR System (SIH26047)
+            Document generated electronically by Arogyam Hospital EMR System
           </div>
           <div className="text-center">
             <div className="w-44 border-b border-slate-400 pb-1 mb-1 font-semibold text-slate-800">
