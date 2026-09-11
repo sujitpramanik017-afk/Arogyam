@@ -11,7 +11,7 @@ default_db_file = (BASE_DIR / "sanaka_hospital.db").as_posix()
 def resolve_database_url() -> str:
     # 1. Direct DATABASE_URL or POSTGRES_URL / SUPABASE_DB_URL
     raw_url = os.getenv("DATABASE_URL") or os.getenv("POSTGRES_URL") or os.getenv("SUPABASE_DB_URL")
-    is_vercel = bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
+    is_vercel = bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME") or os.getenv("LAMBDA_TASK_ROOT"))
     if raw_url and raw_url.strip():
         url = raw_url.strip()
         # Detect unreplaced password placeholder from Supabase UI template
@@ -19,10 +19,11 @@ def resolve_database_url() -> str:
             print("[NOTICE] Supabase DATABASE_URL contains placeholder password [YOUR-PASSWORD]. Please replace with your actual Supabase database password.")
             if not is_vercel:
                 return f"sqlite:///{default_db_file}"
-        # SQLAlchemy 2.0+ requires postgresql:// instead of postgres://
-        if url.startswith("postgres://"):
-            url = url.replace("postgres://", "postgresql://", 1)
-        return url
+        else:
+            # SQLAlchemy 2.0+ requires postgresql:// instead of postgres://
+            if url.startswith("postgres://"):
+                url = url.replace("postgres://", "postgresql://", 1)
+            return url
 
     # 2. Separate credentials (DB_* or DATABASE_*)
     db_name = os.getenv("DB_NAME") or os.getenv("DATABASE_NAME")
@@ -36,10 +37,19 @@ def resolve_database_url() -> str:
         encoded_password = quote_plus(db_password)
         return f"postgresql://{encoded_user}:{encoded_password}@{db_host}:{db_port}/{db_name}"
 
-    # 3. Local fallback to SQLite database file
-    is_vercel = bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
+    # 3. Serverless / Vercel fallback: copy SQLite to writable /tmp
     if is_vercel:
-        print("[WARNING] DATABASE_URL is not configured in Vercel environment variables! Connect Supabase PostgreSQL to persist data.")
+        import shutil
+        tmp_db = "/tmp/sanaka_hospital.db"
+        if not os.path.exists(tmp_db) and os.path.exists(default_db_file):
+            try:
+                shutil.copyfile(default_db_file, tmp_db)
+            except Exception as copy_err:
+                print(f"[Vercel] Notice copying SQLite to /tmp: {copy_err}")
+        print("[WARNING] DATABASE_URL is not configured in Vercel environment variables! Using writable /tmp/sanaka_hospital.db. Connect Supabase PostgreSQL in Vercel settings to permanently persist data.")
+        return f"sqlite:///{tmp_db}"
+
+    # 4. Local fallback to SQLite database file
     return f"sqlite:///{default_db_file}"
 
 
