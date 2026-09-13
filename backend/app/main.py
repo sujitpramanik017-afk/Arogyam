@@ -15,25 +15,6 @@ from app.routes.admin_routes import router as admin_router
 from app.routes.patient_portal_routes import router as patient_portal_router
 from app.utils.seed_data import seed_database
 
-# Initialize database tables and bootstrap admin/departments if new database
-try:
-    if "sqlite" in settings.DATABASE_URL:
-        db_path = settings.DATABASE_URL.replace("sqlite:////", "/").replace("sqlite:///", "")
-        db_dir = os.path.dirname(db_path)
-        if db_dir and not os.path.exists(db_dir):
-            os.makedirs(db_dir, exist_ok=True)
-        print("[Arogyam EMR] Running with local SQLite database")
-    else:
-        # PostgreSQL / Supabase
-        masked_url = settings.DATABASE_URL.split("@")[-1] if "@" in settings.DATABASE_URL else "PostgreSQL"
-        print(f"[Arogyam EMR] Connected to PostgreSQL host: {masked_url}")
-
-    Base.metadata.create_all(bind=engine)
-    seed_database()
-except Exception as e:
-    print(f"[Arogyam EMR] Database initialization notice: {e}")
-
-
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.PROJECT_VERSION,
@@ -66,6 +47,28 @@ all_routers = [
 for router in all_routers:
     app.include_router(router, prefix=settings.API_V1_STR) # /api/...
     app.include_router(router) # fallback if /api prefix is stripped by any proxy
+
+def init_db():
+    try:
+        if "sqlite" in settings.DATABASE_URL:
+            db_path = settings.DATABASE_URL.replace("sqlite:////", "/").replace("sqlite:///", "")
+            db_dir = os.path.dirname(db_path)
+            if db_dir and not os.path.exists(db_dir):
+                os.makedirs(db_dir, exist_ok=True)
+            print("[Arogyam EMR] Running with local SQLite database")
+        else:
+            # PostgreSQL / Supabase
+            masked_url = settings.DATABASE_URL.split("@")[-1] if "@" in settings.DATABASE_URL else "PostgreSQL"
+            print(f"[Arogyam EMR] Connected to PostgreSQL host: {masked_url}")
+
+        Base.metadata.create_all(bind=engine)
+        seed_database()
+    except Exception as e:
+        print(f"[Arogyam EMR] Database initialization notice: {e}")
+
+@app.on_event("startup")
+def on_startup():
+    init_db()
 
 @app.get("/")
 def root():
