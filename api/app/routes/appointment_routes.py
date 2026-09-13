@@ -49,7 +49,7 @@ def get_appointments(
             patient_gender=a.patient.gender if a.patient else "",
             patient_dob=a.patient.dob if a.patient else "",
             patient_phone=a.patient.phone if a.patient else "",
-            doctor_name=a.doctor.user.full_name if a.doctor and a.doctor.user else "Doctor",
+            doctor_name=a.doctor.full_name if a.doctor else "Doctor",
             department_name=a.department.name if a.department else "General"
         ))
     return results
@@ -98,7 +98,7 @@ def create_appointment(
         action="BOOK_APPOINTMENT",
         entity_type="Appointment",
         entity_id=str(appt.id),
-        details=f"Booked token #{token_num} for {patient.full_name} with Dr. {doctor.user.full_name}",
+        details=f"Booked token #{token_num} for {patient.full_name} with Dr. {doctor.full_name}",
         user=current_user
     )
     
@@ -118,7 +118,7 @@ def create_appointment(
         patient_gender=patient.gender,
         patient_dob=patient.dob,
         patient_phone=patient.phone,
-        doctor_name=doctor.user.full_name,
+        doctor_name=doctor.full_name,
         department_name=doctor.department.name if doctor.department else "General"
     )
 
@@ -162,6 +162,6 @@ def update_appointment_status(
         patient_gender=appt.patient.gender if appt.patient else "",
         patient_dob=appt.patient.dob if appt.patient else "",
         patient_phone=appt.patient.phone if appt.patient else "",
-        doctor_name=appt.doctor.user.full_name if appt.doctor else "Doctor",
+        doctor_name=appt.doctor.full_name if appt.doctor else "Doctor",
         department_name=appt.department.name if appt.department else "General"
     )

@@ -12,13 +12,29 @@ def resolve_database_url() -> str:
     # 1. Direct DATABASE_URL or POSTGRES_URL / SUPABASE_DB_URL
     raw_url = os.getenv("DATABASE_URL") or os.getenv("POSTGRES_URL") or os.getenv("SUPABASE_DB_URL")
     is_vercel = bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME") or os.getenv("LAMBDA_TASK_ROOT"))
+    
     if raw_url and raw_url.strip():
         url = raw_url.strip()
+        # Strip extraneous quotes if entered with quotes in Vercel env settings
+        if (url.startswith('"') and url.endswith('"')) or (url.startswith("'") and url.endswith("'")):
+            url = url[1:-1].strip()
+
         # Detect unreplaced password placeholder from Supabase UI template
         if "[YOUR-PASSWORD]" in url or "<password>" in url.lower():
             print("[NOTICE] Supabase DATABASE_URL contains placeholder password [YOUR-PASSWORD]. Please replace with your actual Supabase database password.")
-            if not is_vercel:
-                return f"sqlite:///{default_db_file}"
+            if is_vercel:
+                import shutil
+                tmp_db = "/tmp/sanaka_hospital.db"
+                if not os.path.exists(tmp_db):
+                    for src in [default_db_file, "/var/task/sanaka_hospital.db", (BASE_DIR / "sanaka_hospital.db").as_posix()]:
+                        if os.path.exists(src):
+                            try:
+                                shutil.copyfile(src, tmp_db)
+                                break
+                            except Exception:
+                                pass
+                return f"sqlite:///{tmp_db}"
+            return f"sqlite:///{default_db_file}"
         else:
             # SQLAlchemy 2.0+ requires postgresql:// instead of postgres://
             if url.startswith("postgres://"):
@@ -41,11 +57,14 @@ def resolve_database_url() -> str:
     if is_vercel:
         import shutil
         tmp_db = "/tmp/sanaka_hospital.db"
-        if not os.path.exists(tmp_db) and os.path.exists(default_db_file):
-            try:
-                shutil.copyfile(default_db_file, tmp_db)
-            except Exception as copy_err:
-                print(f"[Vercel] Notice copying SQLite to /tmp: {copy_err}")
+        if not os.path.exists(tmp_db):
+            for src in [default_db_file, "/var/task/sanaka_hospital.db", (BASE_DIR / "sanaka_hospital.db").as_posix()]:
+                if os.path.exists(src):
+                    try:
+                        shutil.copyfile(src, tmp_db)
+                        break
+                    except Exception as copy_err:
+                        print(f"[Vercel] Notice copying SQLite to /tmp: {copy_err}")
         print("[WARNING] DATABASE_URL is not configured in Vercel environment variables! Using writable /tmp/sanaka_hospital.db. Connect Supabase PostgreSQL in Vercel settings to permanently persist data.")
         return f"sqlite:///{tmp_db}"
 
@@ -75,4 +94,3 @@ class Settings:
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
 settings = Settings()
-

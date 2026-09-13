@@ -40,7 +40,7 @@ app = FastAPI(
     description="Arogyam Hospital Patient Case-Taking & Medical Record System (SIH26047)"
 )
 
-# CORS
+# CORS configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -49,17 +49,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mount Routes
-app.include_router(auth_router, prefix=settings.API_V1_STR)
-app.include_router(patient_router, prefix=settings.API_V1_STR)
-app.include_router(case_router, prefix=settings.API_V1_STR)
-app.include_router(appointment_router, prefix=settings.API_V1_STR)
-app.include_router(prescription_router, prefix=settings.API_V1_STR)
-app.include_router(doctor_router, prefix=settings.API_V1_STR)
-app.include_router(department_router, prefix=settings.API_V1_STR)
-app.include_router(ai_router, prefix=settings.API_V1_STR)
-app.include_router(admin_router, prefix=settings.API_V1_STR)
-app.include_router(patient_portal_router, prefix=settings.API_V1_STR)
+# Mount Routes with /api prefix as standard
+all_routers = [
+    auth_router,
+    patient_router,
+    case_router,
+    appointment_router,
+    prescription_router,
+    doctor_router,
+    department_router,
+    ai_router,
+    admin_router,
+    patient_portal_router
+]
+
+for router in all_routers:
+    app.include_router(router, prefix=settings.API_V1_STR) # /api/...
+    app.include_router(router) # fallback if /api prefix is stripped by any proxy
 
 @app.get("/")
 def root():
@@ -74,5 +80,6 @@ def root():
     }
 
 @app.get("/api/health")
+@app.get("/health")
 def health():
     return {"status": "healthy", "service": "Arogyam Hospital EMR API"}

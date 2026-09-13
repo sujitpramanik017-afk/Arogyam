@@ -53,7 +53,12 @@ class Doctor(Base):
 
     @property
     def full_name(self):
-        return self.user.full_name if self.user else "Doctor"
+        if self.user and self.user.full_name:
+            name = self.user.full_name.strip()
+            if name.startswith("Dr. "):
+                return name[4:].strip()
+            return name
+        return "Doctor"
 
     @property
     def email(self):

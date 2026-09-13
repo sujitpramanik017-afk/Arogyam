@@ -19,18 +19,18 @@ class PatientSelfBookingRequest(BaseModel):
     gender: str
     phone: str
     email: Optional[str] = None
-    address: str
-    city: Optional[str] = "Durgapur"
+    address: Optional[str] = "Salt Lake City, Kolkata"
+    city: Optional[str] = "Kolkata"
     state: Optional[str] = "West Bengal"
-    pincode: Optional[str] = "713212"
+    pincode: Optional[str] = "700091"
     emergency_contact_name: Optional[str] = None
     emergency_contact_phone: Optional[str] = None
-    blood_group: Optional[str] = None
+    blood_group: Optional[str] = "B+"
     known_allergies: Optional[str] = None
     
     # Pre-consultation / Intake Data for Doctor
     chief_complaint: str
-    chief_complaint_duration: Optional[str] = None
+    chief_complaint_duration: Optional[str] = "2 days"
     present_illness_history: Optional[str] = None
     past_diseases: Optional[str] = None
     current_medications: Optional[str] = None
@@ -47,8 +47,9 @@ class PatientLookupRequest(BaseModel):
 @router.post("/book-appointment")
 def book_appointment_self(payload: PatientSelfBookingRequest, db: Session = Depends(get_db)):
     try:
+        clean_phone = payload.phone.strip()
         # 1. Check if patient already exists by phone
-        patient = db.query(Patient).filter(Patient.phone == payload.phone.strip()).first()
+        patient = db.query(Patient).filter(Patient.phone == clean_phone).first()
         
         if not patient:
             patient_id_custom = generate_next_patient_id(db)
@@ -57,9 +58,9 @@ def book_appointment_self(payload: PatientSelfBookingRequest, db: Session = Depe
                 full_name=payload.full_name.strip(),
                 dob=payload.dob,
                 gender=payload.gender,
-                phone=payload.phone.strip(),
+                phone=clean_phone,
                 email=payload.email.strip() if payload.email else None,
-                address=payload.address.strip(),
+                address=payload.address.strip() if payload.address else "Salt Lake City, Kolkata",
                 city=payload.city or "Kolkata",
                 state=payload.state or "West Bengal",
                 pincode=payload.pincode or "700091",
@@ -79,13 +80,16 @@ def book_appointment_self(payload: PatientSelfBookingRequest, db: Session = Depe
         # 2. Verify Doctor
         doctor = db.query(Doctor).filter(Doctor.id == payload.doctor_id).first()
         if not doctor:
-            raise HTTPException(status_code=404, detail="Selected doctor not found")
+            # Fallback to first doctor if specified ID is not found
+            doctor = db.query(Doctor).first()
+            if not doctor:
+                raise HTTPException(status_code=404, detail="No doctor available in hospital roster")
             
         dept_id = payload.department_id or doctor.department_id or 1
         
         # 3. Compute token number
         existing_tokens = db.query(Appointment).filter(
-            Appointment.doctor_id == payload.doctor_id,
+            Appointment.doctor_id == doctor.id,
             Appointment.appointment_date == payload.appointment_date
         ).count()
         token_num = existing_tokens + 1
@@ -148,7 +152,7 @@ def book_appointment_self(payload: PatientSelfBookingRequest, db: Session = Depe
         action="ONLINE_PATIENT_BOOKING",
         entity_type="Appointment",
         entity_id=str(appt.id),
-        details=f"Patient {patient.full_name} ({patient.patient_id}) self-booked Token #{token_num} with {doctor.full_name}"
+        details=f"Patient {patient.full_name} ({patient.patient_id}) self-booked Token #{token_num} with Dr. {doctor.full_name}"
     )
     
     return {
@@ -197,7 +201,7 @@ def get_patient_records_self(payload: PatientLookupRequest, db: Session = Depend
                 "token_number": a.token_number,
                 "date": a.appointment_date,
                 "time_slot": a.time_slot,
-                "doctor_name": a.doctor.user.full_name if a.doctor else "Doctor",
+                "doctor_name": a.doctor.full_name if a.doctor else "Doctor",
                 "department": a.department.name if a.department else "General",
                 "status": a.status,
                 "reason": a.reason_for_visit
@@ -209,7 +213,7 @@ def get_patient_records_self(payload: PatientLookupRequest, db: Session = Depend
                 "id": c.id,
                 "case_number": c.case_number,
                 "date": c.visit_date.strftime("%Y-%m-%d"),
-                "doctor_name": c.doctor.user.full_name if c.doctor else "Doctor",
+                "doctor_name": c.doctor.full_name if c.doctor else "Doctor",
                 "diagnosis": c.final_diagnosis or c.provisional_diagnosis or c.chief_complaint,
                 "status": c.status
             }
@@ -219,7 +223,7 @@ def get_patient_records_self(payload: PatientLookupRequest, db: Session = Depend
             {
                 "id": r.id,
                 "date": r.date.strftime("%Y-%m-%d"),
-                "doctor_name": r.doctor.user.full_name if r.doctor else "Doctor",
+                "doctor_name": r.doctor.full_name if r.doctor else "Doctor",
                 "department": r.doctor.department.name if r.doctor and r.doctor.department else "General",
                 "items_count": len(r.items)
             }

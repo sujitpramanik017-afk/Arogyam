@@ -1,13 +1,21 @@
 import os
 import sys
+from pathlib import Path
 
-# Ensure current directory (api/) and backend/ are in sys.path
-current_dir = os.path.dirname(os.path.abspath(__file__))
-if current_dir not in sys.path:
-    sys.path.insert(0, current_dir)
+# Add project root, api, and backend directories to sys.path
+root_dir = Path(__file__).resolve().parent.parent
+api_dir = Path(__file__).resolve().parent
+backend_dir = root_dir / "backend"
 
-backend_dir = os.path.abspath(os.path.join(current_dir, '..', 'backend'))
-if backend_dir not in sys.path:
-    sys.path.insert(0, backend_dir)
+for path_dir in [str(api_dir), str(backend_dir), str(root_dir)]:
+    if path_dir not in sys.path:
+        sys.path.insert(0, path_dir)
 
-from app.main import app
+# Import the FastAPI application instance for Vercel
+try:
+    from app.main import app
+except ImportError:
+    from api.app.main import app
+
+# Expose app for Vercel ASGI / WSGI Serverless Function handler
+# Vercel's @vercel/python builder automatically locates `app`
