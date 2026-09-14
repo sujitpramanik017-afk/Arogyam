@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { Lock, Mail, Shield, Stethoscope, UserCheck, ArrowRight, Activity, Calendar, HeartPulse } from 'lucide-react';
+import { Lock, Mail, ArrowRight, Activity, Calendar } from 'lucide-react';
 import { ArogyaChatbot } from '../components/ArogyaChatbot';
 
 export const Login = () => {
-  const [email, setEmail] = useState('dr.ananya@sanakahospital.com');
-  const [password, setPassword] = useState('Doctor@2026');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const { showError, showSuccess } = useToast();
@@ -26,11 +26,6 @@ export const Login = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleQuickLogin = (roleEmail, rolePwd) => {
-    setEmail(roleEmail);
-    setPassword(rolePwd);
   };
 
   return (
@@ -119,57 +114,6 @@ export const Login = () => {
             <p className="text-xs text-slate-400 mt-1">
               Authorized hospital personnel portal for clinical case management.
             </p>
-          </div>
-
-          {/* Quick Demo Access Roles */}
-          <div className="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700/80 space-y-2.5">
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
-              <span>Quick Demo Staff Logins</span>
-              <span className="text-[10px] text-blue-400">Click to autofill</span>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('dr.ananya@sanakahospital.com', 'Doctor@2026')}
-                className={`p-2 rounded-lg text-left border transition text-xs flex flex-col items-start cursor-pointer ${
-                  email === 'dr.ananya@sanakahospital.com'
-                    ? 'bg-blue-600/30 border-blue-500 text-white'
-                    : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
-                }`}
-              >
-                <Stethoscope className="w-4 h-4 text-blue-400 mb-1" />
-                <span className="font-semibold text-[11px]">Doctor</span>
-                <span className="text-[9px] text-slate-400">Dr. Ananya</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('receptionist@sanakahospital.com', 'Staff@2026')}
-                className={`p-2 rounded-lg text-left border transition text-xs flex flex-col items-start cursor-pointer ${
-                  email === 'receptionist@sanakahospital.com'
-                    ? 'bg-emerald-600/30 border-emerald-500 text-white'
-                    : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
-                }`}
-              >
-                <UserCheck className="w-4 h-4 text-emerald-400 mb-1" />
-                <span className="font-semibold text-[11px]">Reception</span>
-                <span className="text-[9px] text-slate-400">Front Desk</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('admin@sanakahospital.com', 'Sanaka@2026')}
-                className={`p-2 rounded-lg text-left border transition text-xs flex flex-col items-start cursor-pointer ${
-                  email === 'admin@sanakahospital.com'
-                    ? 'bg-purple-600/30 border-purple-500 text-white'
-                    : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
-                }`}
-              >
-                <Shield className="w-4 h-4 text-purple-400 mb-1" />
-                <span className="font-semibold text-[11px]">Admin</span>
-                <span className="text-[9px] text-slate-400">Dr. B. K. Roy</span>
-              </button>
-            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
